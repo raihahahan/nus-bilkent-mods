@@ -298,14 +298,38 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
     return sum + (item.credits ?? (m ? (normalize(m.puCourse1) === normalize(item.code) ? m.puCrse1Units : m.puCrse2Units) : 0));
   }, 0);
   const timetableGroups = useMemo(() => {
-    const groups = new Map<string, ({ item: Selected; colorIndex: number } & MeetingBlock)[]>();
+    const blocks: ({ item: Selected; colorIndex: number } & MeetingBlock)[] = [];
     selected.forEach((item, colorIndex) => meetingBlocks(item.sectionData).filter(block => block.day < 5).forEach(block => {
-      const key = `${block.day}-${block.startMinutes}-${block.endMinutes}`;
-      const group = groups.get(key) ?? [];
-      group.push({ item, colorIndex, ...block });
-      groups.set(key, group);
+      blocks.push({ item, colorIndex, ...block });
     }));
-    return [...groups.entries()];
+    const groups: { key: string; day: number; startMinutes: number; endMinutes: number; laneCount: number; entries: ((typeof blocks)[number] & { lane: number })[] }[] = [];
+    for (const day of days.slice(0, 5).keys()) {
+      const dayBlocks = blocks.filter(block => block.day === day).sort((a, b) => a.startMinutes - b.startMinutes || a.endMinutes - b.endMinutes);
+      let cluster: typeof dayBlocks = [];
+      let clusterEnd = -1;
+      const finishCluster = () => {
+        if (!cluster.length) return;
+        const laneEnds: number[] = [];
+        const entries = cluster.map(block => {
+          let lane = laneEnds.findIndex(end => end <= block.startMinutes);
+          if (lane < 0) lane = laneEnds.length;
+          laneEnds[lane] = block.endMinutes;
+          return { ...block, lane };
+        });
+        groups.push({ key: `${day}-${cluster[0].startMinutes}-${clusterEnd}`, day, startMinutes: cluster[0].startMinutes, endMinutes: clusterEnd, laneCount: laneEnds.length, entries });
+      };
+      dayBlocks.forEach(block => {
+        if (cluster.length && block.startMinutes >= clusterEnd) {
+          finishCluster();
+          cluster = [];
+          clusterEnd = -1;
+        }
+        cluster.push(block);
+        clusterEnd = Math.max(clusterEnd, block.endMinutes);
+      });
+      finishCluster();
+    }
+    return groups;
   }, [selected]);
   const unscheduledSelected = selected.filter(item => meetingBlocks(item.sectionData).length === 0);
   const previewGroups = useMemo(() => {
@@ -379,11 +403,11 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
           {previewGroups.map(([key, group]) => <div key={`preview-${key}`} className="ghostStack" style={{ gridColumn: `${Math.round((group[0].startMinutes - partner.timetable.startMinutes) / 10) + 2} / span ${Math.max(1, Math.round((group[0].endMinutes - group[0].startMinutes) / 10))}`, gridRow: group[0].day + 2 }}>
             {group.map(({ section, colorIndex, room, startMinutes, endMinutes }) => { const color = alternativePalette[colorIndex % alternativePalette.length]; return <button type="button" className="ghostEvent" key={`${section}-${room}`} onClick={() => choosePreviewSection(section)} style={{ borderColor: color.border, background: color.background, color: color.text }} title={`Switch ${previewCode} to Section ${section}`}><b>{previewCode}</b><small>Sec {section} · {room}</small><small>{formatMinutes(startMinutes)}–{formatMinutes(endMinutes)}</small></button>; })}
           </div>)}
-          {timetableGroups.map(([key, group]) => <div key={key} className={`eventStack ${group.length > 1 ? "clash" : ""}`} style={{ gridColumn: `${Math.round((group[0].startMinutes - partner.timetable.startMinutes) / 10) + 2} / span ${Math.max(1, Math.round((group[0].endMinutes - group[0].startMinutes) / 10))}`, gridRow: group[0].day + 2 }}>
-            {group.map(({ item, colorIndex, room, startMinutes, endMinutes }) => <button key={item.id} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
-              style={{ background: palette[colorIndex % palette.length] }} title={`${group.length > 1 ? `Clashes with ${group.filter(x => x.item.id !== item.id).map(x => x.item.code).join(", ")} · ` : ""}${previewCode === item.code ? "Click to hide alternative sections" : "Click to preview alternative sections"}`}>
-              <b>{item.code}</b><small>Sec {item.section} · {room}</small><small>{formatMinutes(startMinutes)}–{formatMinutes(endMinutes)}</small>{group.length > 1 && <em>Clash</em>}
-            </button>)}
+          {timetableGroups.map(group => <div key={group.key} className={`eventStack ${group.laneCount > 1 ? "clash" : ""}`} style={{ gridColumn: `${Math.round((group.startMinutes - partner.timetable.startMinutes) / 10) + 2} / span ${Math.max(1, Math.round((group.endMinutes - group.startMinutes) / 10))}`, gridRow: group.day + 2 }}>
+            {group.entries.map(({ item, colorIndex, room, startMinutes, endMinutes, lane }) => { const clashes = group.entries.filter(other => other.item.id !== item.id && startMinutes < other.endMinutes && other.startMinutes < endMinutes); return <button key={`${item.id}-${startMinutes}-${endMinutes}`} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
+              style={{ background: palette[colorIndex % palette.length], left: `${((startMinutes - group.startMinutes) / (group.endMinutes - group.startMinutes)) * 100}%`, width: `${((endMinutes - startMinutes) / (group.endMinutes - group.startMinutes)) * 100}%`, top: `calc(${(lane / group.laneCount) * 100}% + 2px)`, height: `calc(${100 / group.laneCount}% - 4px)` }} title={`${clashes.length ? `Clashes with ${clashes.map(x => x.item.code).join(", ")} · ` : ""}${previewCode === item.code ? "Click to hide alternative sections" : "Click to preview alternative sections"}`}>
+              <b>{item.code}</b><small>Sec {item.section} · {room}</small><small>{formatMinutes(startMinutes)}–{formatMinutes(endMinutes)}</small>
+            </button>; })}
           </div>)}
         </div></div>
         {selected.length === 0 ? <div className="blank"><span>＋</span><h2>Build your {partner.shortName} week</h2><p>Search a NUS module to find its approved mapping, then pick a {partner.shortName} section.</p></div> :

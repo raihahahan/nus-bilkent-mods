@@ -195,9 +195,8 @@
 
 .eventStack {
   z-index: 2;
-  display: flex;
+  position: relative;
   min-width: 0;
-  gap: 2px;
   padding: 3px;
 }
 
@@ -297,9 +296,10 @@
 }
 
 .eventStack .event {
-  flex: 1 1 0;
+  position: absolute;
   min-width: 0;
   margin: 0;
+  border: 0;
 }
 
 .eventStack .event.previewing {
@@ -357,27 +357,8 @@
 }
 
 .eventStack.clash {
-  border-radius: 7px;
-  background: #e23c3c;
-  padding: 2px;
-}
-
-.eventStack .event em {
-  position: absolute;
-  right: 4px;
-  bottom: 3px;
-  border-radius: 3px;
-  background: #a20d0d;
-  padding: 1px 3px;
-  color: #fff;
-  font-size: 7px;
-  font-style: normal;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.eventStack .event {
-  position: relative;
+  background: transparent;
+  padding: 0;
 }
 
 @media (max-width: 900px) {
