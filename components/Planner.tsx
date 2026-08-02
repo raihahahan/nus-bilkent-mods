@@ -94,10 +94,19 @@ export default function Planner({ partner, mappings, offerings }: { partner: Par
   const courseByCode = useMemo(() => new Map(courses.map(c => [normalize(c.code), c])), [courses]);
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const normalizedQuery = normalize(q);
     const isOffered = (m: Mapping) => [m.puCourse1, m.puCourse2].filter(Boolean).every(code => courseByCode.has(normalize(code)));
     let results = mappings.filter(m => faculty === "All" || m.faculty === faculty);
-    if (q) results = results.filter(m => [m.nusCourse1, m.nusCourse1Title, m.nusCourse2, m.nusCourse2Title,
-      m.puCourse1, m.puCourse1Title, m.puCourse2, m.puCourse2Title].some(x => String(x).toLowerCase().includes(q)));
+    if (q) results = results.filter(m => {
+      const codes = [m.nusCourse1, m.nusCourse2, m.puCourse1, m.puCourse2];
+      if (codes.some(code => normalize(String(code)).includes(normalizedQuery))) return true;
+
+      // Short department searches such as "CS" should only match module codes;
+      // otherwise they also match unrelated title endings such as "genetics".
+      if (normalizedQuery.length < 3) return false;
+      const titles = [m.nusCourse1Title, m.nusCourse2Title, m.puCourse1Title, m.puCourse2Title];
+      return titles.some(title => String(title).toLowerCase().includes(q));
+    });
     if (offeredOnly) results = results.filter(isOffered);
     results = results.map((mapping, index) => ({ mapping, index, offered: isOffered(mapping) }))
       .sort((a, b) => Number(b.offered) - Number(a.offered) || a.index - b.index)
