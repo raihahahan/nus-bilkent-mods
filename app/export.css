@@ -242,23 +242,31 @@
 }
 
 .ghostStack {
-  z-index: 1;
+  z-index: 3;
   display: flex;
   min-width: 0;
   gap: 2px;
   padding: 3px;
-  pointer-events: none;
 }
 
 .ghostEvent {
+  appearance: none;
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
-  border: 1px dashed #3158e8;
+  border: 2px dashed;
   border-radius: 6px;
-  background: #dfe6ffcc;
   padding: 5px 6px;
-  color: #2645ad;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ghostEvent:hover,
+.ghostEvent:focus-visible {
+  filter: saturate(1.25) brightness(.97);
+  outline: 2px solid currentColor;
+  outline-offset: -3px;
 }
 
 .ghostEvent b,

@@ -19,6 +19,13 @@ type Selected = { id: string; code: string; name: string; section: string; secti
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hours = Array.from({ length: 14 }, (_, i) => `${String(i + 8).padStart(2, "0")}:30`);
 const palette = ["#3d64f4", "#dc5c3f", "#099779", "#8a55cc", "#c28205", "#277b9b"];
+const alternativePalette = [
+  { border: "#3158e8", background: "#dfe6ffcc", text: "#2645ad" },
+  { border: "#d14f32", background: "#ffe4ddcc", text: "#9f321c" },
+  { border: "#07866c", background: "#d9f3ebcc", text: "#056b57" },
+  { border: "#7d4cc1", background: "#eadffdCC", text: "#60349e" },
+  { border: "#b47700", background: "#fff0cacc", text: "#815600" },
+];
 const pageSize = 12;
 const faculties = [
   ["All", "All faculties"],
@@ -219,17 +226,25 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
     const selectedCourse = selected.find(item => item.code === previewCode);
     const course = courseByCode.get(normalize(previewCode));
     if (!selectedCourse || !course) return [];
-    const groups = new Map<string, { section: string; day: number; hour: number; room: string }[]>();
-    Object.entries(course.sections).filter(([section]) => section !== selectedCourse.section).forEach(([section, sectionData]) => {
+    const groups = new Map<string, { section: string; colorIndex: number; day: number; hour: number; room: string }[]>();
+    Object.entries(course.sections).filter(([section]) => section !== selectedCourse.section).forEach(([section, sectionData], colorIndex) => {
       slots(sectionData).filter(slot => slot.day < 5 && slot.hour < 12).forEach(slot => {
         const key = `${slot.day}-${slot.hour}`;
         const group = groups.get(key) ?? [];
-        group.push({ section, ...slot });
+        group.push({ section, colorIndex, ...slot });
         groups.set(key, group);
       });
     });
     return [...groups.entries()];
   }, [courseByCode, previewCode, selected]);
+
+  function choosePreviewSection(section: string) {
+    if (!previewCode) return;
+    const course = courseByCode.get(normalize(previewCode));
+    if (!course?.sections[section]) return;
+    addCourse(course, section);
+    setPreviewCode(null);
+  }
 
   return <main>
     <header className="topbar">
@@ -275,7 +290,7 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
           <div className="corner" />{hours.slice(0, 12).map(hour => <div className="timeHeader" key={hour}>{hour}</div>)}
           {days.slice(0, 5).map((day, d) => <div className="dayRow" key={day} style={{ gridRow: d + 2 }}><div className="dayLabel">{day}</div>{hours.slice(0, 12).map(hour => <div className="cell" key={hour} />)}</div>)}
           {previewGroups.map(([key, group]) => <div key={`preview-${key}`} className="ghostStack" style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
-            {group.map(({ section, room }) => <div className="ghostEvent" key={`${section}-${room}`}><b>{previewCode}</b><small>Sec {section} · {room}</small></div>)}
+            {group.map(({ section, colorIndex, room }) => { const color = alternativePalette[colorIndex % alternativePalette.length]; return <button type="button" className="ghostEvent" key={`${section}-${room}`} onClick={() => choosePreviewSection(section)} style={{ borderColor: color.border, background: color.background, color: color.text }} title={`Switch ${previewCode} to Section ${section}`}><b>{previewCode}</b><small>Sec {section} · {room}</small></button>; })}
           </div>)}
           {timetableGroups.map(([key, group]) => <div key={key} className={`eventStack ${group.length > 1 ? "clash" : ""}`} style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
             {group.map(({ item, colorIndex, room }) => <button key={item.id} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
