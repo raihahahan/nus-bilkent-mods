@@ -8,7 +8,18 @@ import "./dark.css";
 
 export const metadata: Metadata = {
   title: "NUS SEP Planner",
+  applicationName: "NUS SEP Planner",
   description: "Find approved NUS exchange module mappings and build a partner-university timetable.",
+  openGraph: {
+    title: "NUS SEP Planner",
+    description: "Find approved NUS exchange module mappings and build a partner-university timetable.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "NUS SEP Planner",
+    description: "Find approved NUS exchange module mappings and build a partner-university timetable.",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
