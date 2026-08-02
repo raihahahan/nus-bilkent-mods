@@ -18,6 +18,17 @@
   background: var(--soft);
 }
 
+.themeToggle svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 :root[data-theme="dark"] {
   color-scheme: dark;
   --ink: #eeeeee;
@@ -136,26 +147,25 @@
   background: #1d1d1d;
 }
 
-/* Exports stay print-friendly regardless of the on-screen theme. */
 :root[data-theme="dark"] .exportSheet.isExporting {
-  --ink: #182033;
-  --muted: #687086;
-  --line: #e4e7ee;
-  --soft: #f6f7fa;
-  background: #fff;
-  color: #182033;
+  --ink: #eeeeee;
+  --muted: #a6a6a6;
+  --line: #3a3a3a;
+  --soft: #252525;
+  background: #121212;
+  color: #eeeeee;
 }
 
 :root[data-theme="dark"] .exportSheet.isExporting .timetable,
 :root[data-theme="dark"] .exportSheet.isExporting .chosenItem {
-  background: #fff;
-  color: #182033;
+  background: #202020;
+  color: #eeeeee;
 }
 
 :root[data-theme="dark"] .exportSheet.isExporting .daysAsRows .cell {
-  background: #fff;
+  background: #181818;
 }
 
 :root[data-theme="dark"] .exportSheet.isExporting .daysAsRows .cell:nth-child(odd) {
-  background: #fafbfc;
+  background: #1d1d1d;
 }
