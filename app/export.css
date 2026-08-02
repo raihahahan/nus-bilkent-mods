@@ -4,6 +4,29 @@
   gap: 7px;
 }
 
+.plannerResources {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+  font-size: 10px;
+}
+
+.plannerResources a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.plannerResources a:hover {
+  text-decoration: underline;
+}
+
+.plannerResources span {
+  color: var(--muted);
+}
+
 .exportButton {
   border: 1px solid #ccd1dc;
   background: #fff;

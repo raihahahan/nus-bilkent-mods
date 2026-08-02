@@ -1,6 +1,6 @@
 import Planner from "@/components/Planner";
-import { activeAdapter } from "@/adapters/active";
+import { availableAdapters } from "@/adapters";
 
 export default function Home() {
-  return <Planner partner={activeAdapter.config} mappings={activeAdapter.mappings} offerings={activeAdapter.offerings} />;
+  return <Planner adapters={availableAdapters} />;
 }

@@ -8,6 +8,68 @@
   margin-left: 18px;
 }
 
+.mark img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.topbar .brandControls {
+  gap: 8px;
+  min-width: 0;
+}
+
+.topbar .partnerSelect {
+  appearance: none;
+  width: auto;
+  min-width: 142px;
+  height: 34px;
+  border-color: #ccd1dc;
+  padding: 0 42px 0 10px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='m3 5 4 4 4-4' fill='none' stroke='%23182033' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.addPartnerButton {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border: 1px solid #ccd1dc;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.addPartnerButton:hover,
+.addPartnerButton:focus-visible {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.issueLink {
+  display: inline-block;
+  margin-top: 7px;
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.issueLink:hover {
+  text-decoration: underline;
+}
+
 .githubLink {
   display: grid;
   place-items: center;
@@ -260,17 +322,26 @@
 
 .promptBox {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
   border: 1px solid #d8def6;
   border-radius: 12px;
   background: #f5f7ff;
   padding: 14px;
 }
 
-.promptBox div {
+.promptHeader,
+.promptHeader > div {
   display: flex;
   flex: 1;
+}
+
+.promptHeader {
+  align-items: center;
+  gap: 16px;
+}
+
+.promptHeader > div {
   flex-direction: column;
   gap: 4px;
 }
@@ -295,6 +366,21 @@
   font-size: 11px;
   font-weight: 750;
   cursor: pointer;
+}
+
+.promptBox pre {
+  max-height: 190px;
+  margin: 0;
+  overflow: auto;
+  border: 1px solid #d8def6;
+  border-radius: 8px;
+  background: #fff;
+  padding: 11px 12px;
+  color: #26304a;
+  font-size: 10px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .adapterDocs {
@@ -323,11 +409,34 @@
     font-size: 10px;
   }
 
+  .topbar .brandControls {
+    gap: 6px;
+  }
+
+  .topbar .partnerSelect {
+    min-width: 0;
+    max-width: 132px;
+    height: 32px;
+    padding-right: 36px;
+    padding-left: 8px;
+    background-position: right 12px center;
+    font-size: 11px;
+  }
+
+  .addPartnerButton {
+    width: 32px;
+    height: 32px;
+  }
+
   .adapterModal {
     padding: 24px 20px;
   }
 
   .promptBox {
+    align-items: stretch;
+  }
+
+  .promptHeader {
     align-items: stretch;
     flex-direction: column;
   }

@@ -15,6 +15,7 @@ type Course = { name: string; sections: Record<string, Section> };
 type Offerings = Record<string, Record<string, Course>>;
 type FlatCourse = Course & { code: string };
 type Selected = { id: string; code: string; name: string; section: string; sectionData: Section };
+type PlannerAdapter = { config: PartnerConfig; mappings: Mapping[]; offerings: Record<string, Offerings> };
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hours = Array.from({ length: 14 }, (_, i) => `${String(i + 8).padStart(2, "0")}:30`);
@@ -39,6 +40,9 @@ const faculties = [
 ] as const;
 
 function normalize(code: string) { return code.replace(/\s+/g, "").toUpperCase(); }
+function utcTimestamp(isoDate: string) {
+  return `${isoDate.slice(0, 10)} ${isoDate.slice(11, 16)} UTC`;
+}
 function slots(section: Section) {
   return Object.entries(section.schedule).map(([raw, room]) => {
     const index = Number(raw);
@@ -59,7 +63,14 @@ function consecutiveBlocks(section: Section) {
   }, []);
 }
 
-export default function Planner({ partner, mappings, offerings }: { partner: PartnerConfig; mappings: Mapping[]; offerings: Record<string, Offerings> }) {
+export default function Planner({ adapters }: { adapters: PlannerAdapter[] }) {
+  const [partnerId, setPartnerId] = useState(adapters[0].config.id);
+  const adapter = adapters.find(item => item.config.id === partnerId) ?? adapters[0];
+  return <PlannerWorkspace key={adapter.config.id} partner={adapter.config} mappings={adapter.mappings} offerings={adapter.offerings}
+    adapterOptions={adapters.map(item => item.config)} onPartnerChange={setPartnerId} />;
+}
+
+function PlannerWorkspace({ partner, mappings, offerings, adapterOptions, onPartnerChange }: { partner: PartnerConfig; mappings: Mapping[]; offerings: Record<string, Offerings>; adapterOptions: PartnerConfig[]; onPartnerChange: (id: string) => void }) {
   const term = partner.term.code;
   const [query, setQuery] = useState("");
   const [faculty, setFaculty] = useState("All");
@@ -195,6 +206,10 @@ Repository setup:
    git clone ${partner.repositoryUrl}.git
 2. Read adapters/README.md and use adapters/bilkent as the reference implementation.
 
+Choose one outcome:
+- contribute the adapter to the shared university dropdown by opening a pull request; or
+- keep and deploy your own independent fork.
+
 Target university: <UNIVERSITY NAME>
 Target academic term: <TERM>
 
@@ -204,7 +219,7 @@ Please:
 - investigate its official public course/section/timetable source and implement a respectful, rate-limited fetcher;
 - normalize offerings into department > course > sections > instructor/schedule;
 - provide reliable partner course-detail links and credit labels;
-- wire the adapter into app/page.tsx;
+- register the adapter in adapters/index.ts so it appears in the university dropdown;
 - preserve search, faculty filtering, availability ordering, pagination, conflict detection, local saving, JPG/PDF export and mobile layout;
 - document how to refresh the data and clearly report any data that cannot be fetched publicly;
 - run the production build and fix all errors.
@@ -263,8 +278,8 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
 
   return <main>
     <header className="topbar">
-      <div><span className="mark">{partner.mark}</span><strong>{partner.plannerTitle}</strong><span className="muted">Module planner</span><a className="githubLink" href={partner.repositoryUrl} target="_blank" rel="noreferrer" aria-label="View project on GitHub" title="View project on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.24.7-3.92-1.38-3.92-1.38-.53-1.35-1.29-1.71-1.29-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.58-.29-5.3-1.29-5.3-5.69 0-1.26.45-2.29 1.2-3.09-.12-.29-.52-1.48.11-3.05 0 0 .98-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.18-1.49 3.16-1.18 3.16-1.18.63 1.57.23 2.76.11 3.05.75.8 1.2 1.83 1.2 3.09 0 4.41-2.72 5.4-5.31 5.69.42.36.79 1.07.79 2.17v3.24c0 .31.21.68.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg></a></div>
-      <div className="headerRight"><button className="adaptButton" onClick={() => setShowAdapterHelp(true)}><span className="adaptDesktop">Map another university?</span><span className="adaptMobile">Other unis</span></button><div className="totals"><span><b>{selected.length}</b> modules</span><span><b>{totalNus}</b> NUS MCs</span><span><b>{totalPartnerCredits}</b> {partner.partnerCreditsLabel}</span></div></div>
+      <div className="brandControls"><span className="mark"><img src="/icon.svg" alt="" /></span><select className="partnerSelect" aria-label="Exchange university" value={partner.id} onChange={event => onPartnerChange(event.target.value)}>{adapterOptions.map(option => <option value={option.id} key={option.id}>{option.plannerTitle}</option>)}</select><button className="addPartnerButton" aria-label="Map another university" title="Map another university" onClick={() => setShowAdapterHelp(true)}>＋</button><span className="muted">Module planner</span><a className="githubLink" href={partner.repositoryUrl} target="_blank" rel="noreferrer" aria-label="View project on GitHub" title="View project on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.24.7-3.92-1.38-3.92-1.38-.53-1.35-1.29-1.71-1.29-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.58-.29-5.3-1.29-5.3-5.69 0-1.26.45-2.29 1.2-3.09-.12-.29-.52-1.48.11-3.05 0 0 .98-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.18-1.49 3.16-1.18 3.16-1.18.63 1.57.23 2.76.11 3.05.75.8 1.2 1.83 1.2 3.09 0 4.41-2.72 5.4-5.31 5.69.42.36.79 1.07.79 2.17v3.24c0 .31.21.68.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg></a></div>
+      <div className="headerRight"><div className="totals"><span><b>{selected.length}</b> modules</span><span><b>{totalNus}</b> NUS MCs</span><span><b>{totalPartnerCredits}</b> {partner.partnerCreditsLabel}</span></div></div>
     </header>
     <div className="mobileTotals"><span><b>{totalNus}</b> NUS MCs</span><span><b>{totalPartnerCredits}</b> {partner.partnerCreditsLabel}</span></div>
 
@@ -297,7 +312,7 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
         onKeyDown={e => { if (e.key === "ArrowLeft") setSidebarWidth(w => Math.max(320, w - 10)); if (e.key === "ArrowRight") setSidebarWidth(w => Math.min(500, w + 10)); }} />
 
       <section className="planner">
-        <div className="plannerHead"><div><h1>Your timetable</h1><p>Choose a section from the search results. Conflicts are flagged before you add.</p></div><div className="plannerActions"><button className="exportButton" disabled={!!exporting} onClick={() => exportTimetable("jpg")}>{exporting === "jpg" ? "Exporting…" : "Export JPG"}</button><button className="exportButton primary" disabled={!!exporting} onClick={() => exportTimetable("pdf")}>{exporting === "pdf" ? "Exporting…" : "Export PDF"}</button>{selected.length > 0 && <button className="clear" onClick={() => setSelected([])}>Clear all</button>}</div></div>
+        <div className="plannerHead"><div><h1>Your timetable</h1><p>Choose a section from the search results. Conflicts are flagged before you add.</p><div className="plannerResources"><a href={partner.importantDocumentUrl} target="_blank" rel="noreferrer">{partner.importantDocumentLabel} ↗</a><span>Data last updated <time dateTime={partner.dataUpdatedAt}>{utcTimestamp(partner.dataUpdatedAt)}</time></span></div></div><div className="plannerActions"><button className="exportButton" disabled={!!exporting} onClick={() => exportTimetable("jpg")}>{exporting === "jpg" ? "Exporting…" : "Export JPG"}</button><button className="exportButton primary" disabled={!!exporting} onClick={() => exportTimetable("pdf")}>{exporting === "pdf" ? "Exporting…" : "Export PDF"}</button>{selected.length > 0 && <button className="clear" onClick={() => setSelected([])}>Clear all</button>}</div></div>
         <div className="exportSheet" ref={exportRef}>
         <div className="exportTitle"><b>{partner.plannerTitle} timetable</b><div className="exportMeta"><span>{partner.term.label} · Semester {partner.term.code}</span><strong>{totalNus} NUS MCs · {totalPartnerCredits} {partner.partnerCreditsLabel}</strong></div></div>
         {unscheduledSelected.length > 0 && <div className="unscheduledNotice"><b>Time not published</b><span>{unscheduledSelected.map(item => `${item.code} · Section ${item.section}`).join(" · ")}</span><small>These modules are selected, but {partner.shortName} has not published meeting times yet, so they cannot be placed or clash-checked.</small></div>}
@@ -321,7 +336,7 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
     </div>
     <button className="mobileSearchTrigger" onClick={() => setMobileSearchOpen(true)}><span>＋</span>Add module to timetable</button>
     {mobileSearchOpen && <section className="mobileSearchOverlay" aria-label="Search modules"><div className="mobileSearchHeader"><div className="mobileSearchInput"><span>⌕</span><input ref={mobileSearchRef} suppressHydrationWarning value={query} onChange={e => setQuery(e.target.value)} placeholder="Add module to timetable" /></div><button aria-label="Close module search" onClick={() => setMobileSearchOpen(false)}>×</button></div><div className="mobileSearchBody">{!query.trim() ? <div className="mobileSearchHelp"><b>Search all {mappings.length} approved mappings</b><span>Try an NUS or {partner.shortName} module code, or a module title.</span><small>For example: “CS4243”, “CS 484” or “Computer Vision”</small></div> : <><div className="resultMeta"><span>{matches.length} mapping{matches.length === 1 ? "" : "s"}</span>{matches.length > pageSize && <span>Page {page} of {pageCount}</span>}</div>{visibleMatches.map((m, i) => <MappingCard key={`mobile-${m.nusCourse1}-${m.puCourse1}-${i}`} partner={partner} mapping={m} courseByCode={courseByCode} addCourse={(course, section) => { addCourse(course, section); setMobileSearchOpen(false); }} hasConflict={hasConflict} selected={selected} />)}{!matches.length && <div className="emptySmall">No modules match your search.</div>}{pageCount > 1 && <div className="pagination"><button disabled={page === 1} onClick={() => setPage(p => p - 1)}>← Previous</button><span>{page} / {pageCount}</span><button disabled={page === pageCount} onClick={() => setPage(p => p + 1)}>Next →</button></div>}</>}</div></section>}
-    {showAdapterHelp && <div className="modalBackdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowAdapterHelp(false); }}><section className="adapterModal" role="dialog" aria-modal="true" aria-labelledby="adapter-title"><button className="modalClose" aria-label="Close" onClick={() => setShowAdapterHelp(false)}>×</button><span className="modalEyebrow">Open-source adapters</span><h2 id="adapter-title">Map another university</h2><p>The planner is ready for more partner universities. Each one needs a small adapter because course and timetable sources differ.</p><ol><li><b>Fork and clone</b><span>Fork the repository on GitHub, then clone it locally.</span><code>git clone {partner.repositoryUrl}.git</code></li><li><b>Copy the reference adapter</b><span>Duplicate <code>adapters/bilkent</code>, then update its name, term, links and credit labels.</span></li><li><b>Connect official data</b><span>Filter the NUS mapping dataset and translate the university’s public offerings into the documented course/section format.</span></li><li><b>Wire up and verify</b><span>Switch the config/data imports, test links and conflicts, then open a pull request.</span></li></ol><div className="promptBox"><div><b>Let your favourite AI handle the implementation</b><span>Copy a detailed, repository-aware prompt with the requirements and safety checks included.</span></div><button onClick={copyAdapterPrompt}>{copied ? "Copied!" : "Copy AI prompt"}</button></div><span className="adapterDocs">Full schema and checklist: adapters/README.md</span></section></div>}
+    {showAdapterHelp && <div className="modalBackdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowAdapterHelp(false); }}><section className="adapterModal" role="dialog" aria-modal="true" aria-labelledby="adapter-title"><button className="modalClose" aria-label="Close" onClick={() => setShowAdapterHelp(false)}>×</button><span className="modalEyebrow">Open-source adapters</span><h2 id="adapter-title">Map another university</h2><p>Add a code-level adapter. No database is required. Contribute it to this planner’s dropdown with a pull request, or maintain and deploy your own fork.</p><ol><li><b>Fork and clone</b><span>Fork the repository on GitHub and clone your fork locally.</span><code>git clone {partner.repositoryUrl}.git</code></li><li><b>Copy the reference adapter</b><span>Duplicate <code>adapters/bilkent</code>, then update its name, term, links, document and credit labels.</span></li><li><b>Connect official data</b><span>Filter the NUS mapping dataset and translate the university’s public offerings into the documented course/section format.</span></li><li><b>Register and verify</b><span>Add it to <code>adapters/index.ts</code>, test the dropdown, links and conflicts, then open a PR. You can also keep the fork as your own deployment.</span><a className="issueLink" href={`${partner.repositoryUrl}/issues`} target="_blank" rel="noreferrer">Open an issue before your PR ↗</a></li></ol><div className="promptBox"><div className="promptHeader"><div><b>Let your favourite AI handle the implementation</b><span>Review the full prompt below, then copy it into your preferred AI tool.</span></div><button onClick={copyAdapterPrompt}>{copied ? "Copied!" : "Copy AI prompt"}</button></div><pre><code>{adapterPrompt}</code></pre></div><span className="adapterDocs">Full schema and checklist: adapters/README.md</span></section></div>}
   </main>;
 }
 
@@ -346,7 +361,7 @@ function MappingCard({ partner, mapping: m, courseByCode, addCourse, hasConflict
       <span className="arrow">↔</span>
       <Module side={partner.shortName} code={m.puCourse1} title={m.puCourse1Title} credits={m.puCrse1Units} creditUnit={partner.partnerCreditUnit} href={partnerCourseUrl(partner, m.puCourse1)} />
     </div>
-    {(m.nusCourse2 || m.puCourse2) && <div className="secondary">Also: {m.nusCourse2 || "—"} ↔ {m.puCourse2 || "—"}</div>}
+    {(m.nusCourse2 || m.puCourse2) && <div className="secondary">Also: {m.nusCourse2 || "None"} ↔ {m.puCourse2 || "None"}</div>}
     {partnerCodes.map(code => { const course = courseByCode.get(normalize(code)); return course ? <Sections key={code} course={course} addCourse={addCourse} hasConflict={hasConflict} selected={selected} /> : <p className="unavailable" key={code}>{code} is not offered this term</p>; })}
   </article>;
 }

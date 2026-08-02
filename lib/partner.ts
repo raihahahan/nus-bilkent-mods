@@ -9,6 +9,9 @@ export type PartnerConfig = {
   partnerCreditUnit: string;
   courseUrlTemplate: string;
   offeringsSource: string;
+  dataUpdatedAt: string;
+  importantDocumentUrl: string;
+  importantDocumentLabel: string;
   storageKey: string;
   exportSlug: string;
   repositoryUrl: string;

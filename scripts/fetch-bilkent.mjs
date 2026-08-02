@@ -69,4 +69,6 @@ for (const row of scheduled) {
 }
 await mkdir(new URL("../adapters/bilkent/", import.meta.url), { recursive: true });
 await writeFile(new URL("../adapters/bilkent/offerings.json", import.meta.url), JSON.stringify(output));
+config.dataUpdatedAt = new Date().toISOString();
+await writeFile(new URL("../adapters/bilkent/config.json", import.meta.url), `${JSON.stringify(config, null, 2)}\n`);
 console.log(`Wrote ${Object.keys(output).length} departments to adapters/bilkent/offerings.json for ${semester}`);
