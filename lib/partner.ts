@@ -21,5 +21,6 @@ export function partnerCourseUrl(partner: PartnerConfig, courseCode: string) {
   const normalizedCode = `${department} ${match[2]}`;
   return partner.courseUrlTemplate
     .replace("{department}", encodeURIComponent(department))
+    .replace("{number}", encodeURIComponent(match[2]))
     .replace("{code}", encodeURIComponent(normalizedCode));
 }

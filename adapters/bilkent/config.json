@@ -10,7 +10,7 @@
   },
   "partnerCreditsLabel": "Bilkent credits",
   "partnerCreditUnit": "credits",
-  "courseUrlTemplate": "https://stars.bilkent.edu.tr/homepage/courses.php?DEPT={department}#{code}",
+  "courseUrlTemplate": "https://stars.bilkent.edu.tr/syllabus/view/{department}/{number}/",
   "offeringsSource": "https://stars.bilkent.edu.tr/homepage/plain_offerings",
   "storageKey": "nus-bilkent-planner-state-v1",
   "exportSlug": "nus-bilkent-timetable",
