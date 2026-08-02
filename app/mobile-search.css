@@ -1,0 +1,132 @@
+.mobileSearchTrigger,
+.mobileSearchOverlay,
+.mobileTotals {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .planner {
+    padding-bottom: 92px;
+  }
+
+  .mobileTotals {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    min-height: 36px;
+    border-bottom: 1px solid var(--line);
+    background: var(--soft);
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .mobileTotals b {
+    color: var(--ink);
+    font-size: 12px;
+  }
+
+  .mobileSearchTrigger {
+    position: fixed;
+    z-index: 30;
+    right: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 50px;
+    border: 0;
+    border-radius: 13px;
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 8px 28px #18203355;
+    font-size: 14px;
+    font-weight: 750;
+  }
+
+  .mobileSearchTrigger span {
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .mobileSearchOverlay {
+    position: fixed;
+    z-index: 60;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: #f7f8fb;
+  }
+
+  .mobileSearchHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: max(12px, env(safe-area-inset-top)) 12px 12px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .mobileSearchInput {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    border: 1px solid var(--blue);
+    border-radius: 10px;
+    padding: 0 12px;
+    box-shadow: 0 0 0 3px #3158e814;
+  }
+
+  .mobileSearchInput input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 16px;
+  }
+
+  .mobileSearchHeader > button {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .mobileSearchBody {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+  }
+
+  .mobileSearchHelp {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 18px 8px;
+  }
+
+  .mobileSearchHelp b {
+    font-size: 16px;
+  }
+
+  .mobileSearchHelp span {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .mobileSearchHelp small {
+    color: #9299aa;
+    font-size: 12px;
+  }
+}

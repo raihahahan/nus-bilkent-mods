@@ -1,0 +1,339 @@
+.plannerActions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.exportButton {
+  border: 1px solid #ccd1dc;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--ink);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.exportButton.primary {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: #fff;
+}
+
+.exportButton:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+.exportTitle {
+  display: none;
+}
+
+.exportSheet.isExporting {
+  width: 900px;
+  padding: 24px;
+  background: #fff;
+}
+
+.exportSheet.isExporting .exportTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.exportSheet.isExporting .exportTitle b {
+  font-size: 20px;
+}
+
+.exportSheet.isExporting .exportTitle span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.exportSheet.isExporting .exportMeta {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exportSheet.isExporting .exportMeta strong {
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.exportSheet.isExporting .timetableWrap {
+  margin-top: 0;
+  overflow: visible;
+}
+
+.exportSheet.isExporting .chosenItem button {
+  display: none;
+}
+
+.exportSheet.isExporting .event {
+  padding: 4px 5px;
+}
+
+.exportSheet.isExporting .event b {
+  font-size: 8px;
+}
+
+.exportSheet.isExporting .event small {
+  margin-top: 2px;
+  font-size: 6.5px;
+}
+
+.exportSheet.isExporting .event em {
+  right: 2px;
+  bottom: 2px;
+  font-size: 5.5px;
+}
+
+.exportSheet.isExporting .chosenItem b {
+  font-size: 10px;
+}
+
+.exportSheet.isExporting .chosenItem span {
+  font-size: 8px;
+}
+
+.exportCredits {
+  display: none;
+}
+
+.exportSheet.isExporting .exportCredits {
+  display: block;
+  color: var(--ink);
+  font-size: 7px;
+  font-weight: 750;
+}
+
+.chosenItem .chosenLinks {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  margin-top: 6px;
+}
+
+.chosenLinks a {
+  color: var(--blue);
+  font-size: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.chosenLinks a:hover {
+  text-decoration: underline;
+}
+
+.exportSheet.isExporting .chosenLinks a {
+  font-size: 7px;
+}
+
+.sections button {
+  min-width: 40px;
+  padding: 7px 11px;
+}
+
+.sections button.tba {
+  border-style: dashed;
+  color: #8a6334;
+}
+
+.unscheduledNotice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  margin-top: 16px;
+  border: 1px solid #ead6b6;
+  border-radius: 9px;
+  background: #fff9ed;
+  padding: 10px 12px;
+}
+
+.unscheduledNotice b {
+  grid-row: 1 / 3;
+  color: #8a5a17;
+  font-size: 11px;
+}
+
+.unscheduledNotice span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.unscheduledNotice small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.eventStack {
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  gap: 2px;
+  padding: 3px;
+}
+
+.timetable.daysAsRows {
+  grid-template-columns: 72px repeat(12, minmax(62px, 1fr));
+  grid-template-rows: 42px repeat(5, 74px);
+  min-width: 816px;
+}
+
+.daysAsRows .corner,
+.daysAsRows .timeHeader {
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.daysAsRows .corner {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+}
+
+.daysAsRows .timeHeader {
+  display: grid;
+  place-items: center;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.daysAsRows .dayRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 72px repeat(12, minmax(62px, 1fr));
+  pointer-events: none;
+}
+
+.daysAsRows .dayLabel {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.daysAsRows .cell {
+  border-right: 0;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.eventStack .event {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+
+.eventStack .event.previewing {
+  outline: 3px solid #182033;
+  outline-offset: -2px;
+}
+
+.ghostStack {
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  gap: 2px;
+  padding: 3px;
+  pointer-events: none;
+}
+
+.ghostEvent {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px dashed #3158e8;
+  border-radius: 6px;
+  background: #dfe6ffcc;
+  padding: 5px 6px;
+  color: #2645ad;
+}
+
+.ghostEvent b,
+.ghostEvent small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ghostEvent b {
+  font-size: 10px;
+}
+
+.ghostEvent small {
+  margin-top: 2px;
+  font-size: 8px;
+}
+
+.exportSheet.isExporting .ghostStack {
+  display: none;
+}
+
+.eventStack.clash {
+  border-radius: 7px;
+  background: #e23c3c;
+  padding: 2px;
+}
+
+.eventStack .event em {
+  position: absolute;
+  right: 4px;
+  bottom: 3px;
+  border-radius: 3px;
+  background: #a20d0d;
+  padding: 1px 3px;
+  color: #fff;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.eventStack .event {
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .plannerHead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .plannerHead {
+    gap: 14px;
+  }
+
+  .plannerActions {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .plannerActions button {
+    flex: 0 0 auto;
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+
+  .timetableWrap {
+    margin-top: 14px;
+  }
+
+  .timetable {
+    min-width: 816px;
+  }
+}

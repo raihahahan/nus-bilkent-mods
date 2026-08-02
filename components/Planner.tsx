@@ -1,0 +1,319 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { partnerCourseUrl, type PartnerConfig } from "@/lib/partner";
+
+type Mapping = {
+  faculty: string;
+  puCourse1: string; puCourse1Title: string; puCrse1Units: number;
+  puCourse2: string; puCourse2Title: string; puCrse2Units: number;
+  nusCourse1: string; nusCourse1Title: string; nusCrse1Units: number;
+  nusCourse2: string; nusCourse2Title: string; nusCrse2Units: number;
+};
+type Section = { instructor: string; schedule: Record<string, string> };
+type Course = { name: string; sections: Record<string, Section> };
+type Offerings = Record<string, Record<string, Course>>;
+type FlatCourse = Course & { code: string };
+type Selected = { id: string; code: string; name: string; section: string; sectionData: Section };
+
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const hours = Array.from({ length: 14 }, (_, i) => `${String(i + 8).padStart(2, "0")}:30`);
+const palette = ["#3d64f4", "#dc5c3f", "#099779", "#8a55cc", "#c28205", "#277b9b"];
+const pageSize = 12;
+const faculties = [
+  ["All", "All faculties"],
+  ["School of Computing", "Computing"],
+  ["Faculty of Science", "Science"],
+  ["College of Design and Engineering", "Engineering & Design"],
+  ["Faculty of Arts & Social Sciences", "Arts & Social Sciences"],
+  ["NUS Business School", "Business"],
+] as const;
+
+function normalize(code: string) { return code.replace(/\s+/g, "").toUpperCase(); }
+function slots(section: Section) {
+  return Object.entries(section.schedule).map(([raw, room]) => {
+    const index = Number(raw);
+    return { day: index % 7, hour: Math.floor(index / 7), room };
+  });
+}
+
+export default function Planner({ partner, mappings, offerings }: { partner: PartnerConfig; mappings: Mapping[]; offerings: Record<string, Offerings> }) {
+  const term = partner.term.code;
+  const [query, setQuery] = useState("");
+  const [faculty, setFaculty] = useState("All");
+  const [offeredOnly, setOfferedOnly] = useState(false);
+  const [page, setPage] = useState(1);
+  const [sidebarWidth, setSidebarWidth] = useState(370);
+  const [selected, setSelected] = useState<Selected[]>([]);
+  const [previewCode, setPreviewCode] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+  const [exporting, setExporting] = useState<"jpg" | "pdf" | null>(null);
+  const [showAdapterHelp, setShowAdapterHelp] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(partner.storageKey);
+    if (saved) {
+      try {
+        const state = JSON.parse(saved);
+        if (typeof state.query === "string") setQuery(state.query);
+        const savedFaculty = state.faculty ?? state.school;
+        if (typeof savedFaculty === "string" && faculties.some(([value]) => value === savedFaculty)) setFaculty(savedFaculty);
+        if (typeof state.offeredOnly === "boolean") setOfferedOnly(state.offeredOnly);
+        if (typeof state.sidebarWidth === "number") setSidebarWidth(Math.min(500, Math.max(320, state.sidebarWidth)));
+        if (Array.isArray(state.selected)) setSelected(state.selected);
+      } catch {}
+    } else {
+      const legacyPlan = localStorage.getItem("nus-bilkent-plan");
+      if (legacyPlan) { try { setSelected(JSON.parse(legacyPlan)); } catch {} }
+    }
+    setHydrated(true);
+  }, []);
+  useEffect(() => {
+    if (!hydrated) return;
+    localStorage.setItem(partner.storageKey, JSON.stringify({ query, faculty, offeredOnly, selected, sidebarWidth }));
+  }, [faculty, hydrated, offeredOnly, partner.storageKey, query, selected, sidebarWidth]);
+
+  useEffect(() => { setPage(1); }, [faculty, offeredOnly, query]);
+  useEffect(() => {
+    if (!mobileSearchOpen) return;
+    mobileSearchRef.current?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [mobileSearchOpen]);
+  useEffect(() => {
+    if (previewCode && !selected.some(item => item.code === previewCode)) setPreviewCode(null);
+  }, [previewCode, selected]);
+
+  const courses = useMemo(() => Object.values(offerings[term]).flatMap(dept =>
+    Object.entries(dept).map(([code, course]) => ({ code, ...course }))), [offerings, term]);
+  const courseByCode = useMemo(() => new Map(courses.map(c => [normalize(c.code), c])), [courses]);
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const isOffered = (m: Mapping) => [m.puCourse1, m.puCourse2].filter(Boolean).every(code => courseByCode.has(normalize(code)));
+    let results = mappings.filter(m => faculty === "All" || m.faculty === faculty);
+    if (q) results = results.filter(m => [m.nusCourse1, m.nusCourse1Title, m.nusCourse2, m.nusCourse2Title,
+      m.puCourse1, m.puCourse1Title, m.puCourse2, m.puCourse2Title].some(x => String(x).toLowerCase().includes(q)));
+    if (offeredOnly) results = results.filter(isOffered);
+    results = results.map((mapping, index) => ({ mapping, index, offered: isOffered(mapping) }))
+      .sort((a, b) => Number(b.offered) - Number(a.offered) || a.index - b.index)
+      .map(({ mapping }) => mapping);
+    return results;
+  }, [courseByCode, faculty, mappings, offeredOnly, query]);
+  const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
+  const visibleMatches = matches.slice((page - 1) * pageSize, page * pageSize);
+
+  function addCourse(course: FlatCourse, section: string) {
+    const id = `${course.code}-${section}`;
+    const item = { id, code: course.code, name: course.name, section, sectionData: course.sections[section] };
+    setSelected(prev => prev.some(x => x.id === id)
+      ? prev.filter(x => x.id !== id)
+      : [...prev.filter(x => x.code !== course.code), item]);
+  }
+  function hasConflict(candidate: Section, ignoreCode = "") {
+    const used = new Set(selected.filter(x => x.code !== ignoreCode).flatMap(x => Object.keys(x.sectionData.schedule)));
+    return Object.keys(candidate.schedule).some(key => used.has(key));
+  }
+
+  async function exportTimetable(format: "jpg" | "pdf") {
+    if (!exportRef.current || exporting) return;
+    setExporting(format);
+    try {
+      exportRef.current.classList.add("isExporting");
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(exportRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        width: exportRef.current.scrollWidth,
+        height: exportRef.current.scrollHeight,
+        windowWidth: exportRef.current.scrollWidth,
+      });
+      const filename = `${partner.exportSlug}-${partner.term.code}`;
+      if (format === "jpg") {
+        const link = document.createElement("a");
+        link.download = `${filename}.jpg`;
+        link.href = canvas.toDataURL("image/jpeg", 0.94);
+        link.click();
+      } else {
+        const { jsPDF } = await import("jspdf");
+        const margin = 8;
+        const pageWidth = canvas.width >= canvas.height ? 297 : 210;
+        const imageWidth = pageWidth - margin * 2;
+        const imageHeight = imageWidth * (canvas.height / canvas.width);
+        const pageHeight = imageHeight + margin * 2;
+        const pdf = new jsPDF({ orientation: pageWidth >= pageHeight ? "landscape" : "portrait", unit: "mm", format: [pageWidth, pageHeight] });
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.94), "JPEG", margin, margin, imageWidth, imageHeight);
+        pdf.save(`${filename}.pdf`);
+      }
+    } finally {
+      exportRef.current?.classList.remove("isExporting");
+      setExporting(null);
+    }
+  }
+
+  const adapterPrompt = `Extend this Next.js exchange timetable planner for another NUS partner university.
+
+Repository setup:
+1. Fork the repository, then clone your fork:
+   git clone ${partner.repositoryUrl}.git
+2. Read adapters/README.md and use adapters/bilkent as the reference implementation.
+
+Target university: <UNIVERSITY NAME>
+Target academic term: <TERM>
+
+Please:
+- create adapters/<university-id>/config.json without hard-coding university labels in the shared UI;
+- extract that university's approved mappings from the NUS mapping dataset into the existing normalized mapping schema;
+- investigate its official public course/section/timetable source and implement a respectful, rate-limited fetcher;
+- normalize offerings into department > course > sections > instructor/schedule;
+- provide reliable partner course-detail links and credit labels;
+- wire the adapter into app/page.tsx;
+- preserve search, faculty filtering, availability ordering, pagination, conflict detection, local saving, JPG/PDF export and mobile layout;
+- document how to refresh the data and clearly report any data that cannot be fetched publicly;
+- run the production build and fix all errors.
+
+Do not invent offerings or meeting times. Prefer official sources and keep partner-specific parsing inside the adapter.`;
+
+  async function copyAdapterPrompt() {
+    await navigator.clipboard.writeText(adapterPrompt);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  }
+
+  const totalNus = selected.reduce((sum, item) => {
+    const m = mappings.find(x => [x.puCourse1, x.puCourse2].some(code => normalize(code) === normalize(item.code)));
+    return sum + (m ? m.nusCrse1Units + m.nusCrse2Units : 0);
+  }, 0);
+  const totalPartnerCredits = selected.reduce((sum, item) => {
+    const m = mappings.find(x => [x.puCourse1, x.puCourse2].some(code => normalize(code) === normalize(item.code)));
+    return sum + (m ? (normalize(m.puCourse1) === normalize(item.code) ? m.puCrse1Units : m.puCrse2Units) : 0);
+  }, 0);
+  const timetableGroups = useMemo(() => {
+    const groups = new Map<string, { item: Selected; colorIndex: number; day: number; hour: number; room: string }[]>();
+    selected.forEach((item, colorIndex) => slots(item.sectionData).filter(slot => slot.day < 5 && slot.hour < 12).forEach(slot => {
+      const key = `${slot.day}-${slot.hour}`;
+      const group = groups.get(key) ?? [];
+      group.push({ item, colorIndex, ...slot });
+      groups.set(key, group);
+    }));
+    return [...groups.entries()];
+  }, [selected]);
+  const unscheduledSelected = selected.filter(item => Object.keys(item.sectionData.schedule).length === 0);
+  const previewGroups = useMemo(() => {
+    if (!previewCode) return [];
+    const selectedCourse = selected.find(item => item.code === previewCode);
+    const course = courseByCode.get(normalize(previewCode));
+    if (!selectedCourse || !course) return [];
+    const groups = new Map<string, { section: string; day: number; hour: number; room: string }[]>();
+    Object.entries(course.sections).filter(([section]) => section !== selectedCourse.section).forEach(([section, sectionData]) => {
+      slots(sectionData).filter(slot => slot.day < 5 && slot.hour < 12).forEach(slot => {
+        const key = `${slot.day}-${slot.hour}`;
+        const group = groups.get(key) ?? [];
+        group.push({ section, ...slot });
+        groups.set(key, group);
+      });
+    });
+    return [...groups.entries()];
+  }, [courseByCode, previewCode, selected]);
+
+  return <main>
+    <header className="topbar">
+      <div><span className="mark">{partner.mark}</span><strong>{partner.plannerTitle}</strong><span className="muted">Module planner</span><a className="githubLink" href={partner.repositoryUrl} target="_blank" rel="noreferrer" aria-label="View project on GitHub" title="View project on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.24.7-3.92-1.38-3.92-1.38-.53-1.35-1.29-1.71-1.29-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.58-.29-5.3-1.29-5.3-5.69 0-1.26.45-2.29 1.2-3.09-.12-.29-.52-1.48.11-3.05 0 0 .98-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.18-1.49 3.16-1.18 3.16-1.18.63 1.57.23 2.76.11 3.05.75.8 1.2 1.83 1.2 3.09 0 4.41-2.72 5.4-5.31 5.69.42.36.79 1.07.79 2.17v3.24c0 .31.21.68.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg></a></div>
+      <div className="headerRight"><button className="adaptButton" onClick={() => setShowAdapterHelp(true)}><span className="adaptDesktop">Map another university?</span><span className="adaptMobile">Other unis</span></button><div className="totals"><span><b>{selected.length}</b> modules</span><span><b>{totalNus}</b> NUS MCs</span><span><b>{totalPartnerCredits}</b> {partner.partnerCreditsLabel}</span></div></div>
+    </header>
+    <div className="mobileTotals"><span><b>{totalNus}</b> NUS MCs</span><span><b>{totalPartnerCredits}</b> {partner.partnerCreditsLabel}</span></div>
+
+    <div className="workspace" style={{ gridTemplateColumns: `${sidebarWidth}px 6px minmax(700px, 1fr)` }}>
+      <aside>
+        <div className="asideHead">
+          <div className="desktopFilters">
+            <label>{partner.shortName} term</label>
+            <div className="termBadge"><span>{partner.term.label}</span><small>Semester {partner.term.code}</small></div>
+            <label className="schoolLabel" htmlFor="faculty">NUS faculty</label>
+            <select id="faculty" className="schoolFilter" suppressHydrationWarning value={faculty} onChange={e => setFaculty(e.target.value)}>
+              {faculties.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+            <label className="offeredFilter"><input type="checkbox" checked={offeredOnly} onChange={e => setOfferedOnly(e.target.checked)} /><span>Offered this term only</span></label>
+          </div>
+          <div className="search"><span>⌕</span><input suppressHydrationWarning value={query} onChange={e => setQuery(e.target.value)} placeholder="Search CS2040, CS 201, algorithms…" /></div>
+          <p className="hint">Search by either NUS or {partner.shortName} code/title.</p>
+        </div>
+        <div className={`results ${query.trim() ? "mobileSearchActive" : ""}`}>
+          <div className="resultMeta"><span>{matches.length} mapping{matches.length === 1 ? "" : "s"}</span>{matches.length > pageSize && <span>Page {page} of {pageCount}</span>}</div>
+          {visibleMatches.map((m, i) => <MappingCard key={`${m.nusCourse1}-${m.puCourse1}-${i}`} partner={partner} mapping={m} courseByCode={courseByCode} addCourse={addCourse} hasConflict={hasConflict} selected={selected} />)}
+          {!matches.length && <div className="emptySmall">No modules match the current filters.</div>}
+          {pageCount > 1 && <div className="pagination"><button disabled={page === 1} onClick={() => setPage(p => p - 1)}>← Previous</button><span>{page} / {pageCount}</span><button disabled={page === pageCount} onClick={() => setPage(p => p + 1)}>Next →</button></div>}
+        </div>
+      </aside>
+      <div className="resizeHandle" role="separator" aria-label="Resize module sidebar" aria-orientation="vertical" aria-valuemin={320} aria-valuemax={500} aria-valuenow={sidebarWidth} tabIndex={0}
+        onPointerDown={e => e.currentTarget.setPointerCapture(e.pointerId)}
+        onPointerMove={e => { if (e.currentTarget.hasPointerCapture(e.pointerId)) setSidebarWidth(Math.min(500, Math.max(320, e.clientX))); }}
+        onPointerUp={e => e.currentTarget.releasePointerCapture(e.pointerId)}
+        onKeyDown={e => { if (e.key === "ArrowLeft") setSidebarWidth(w => Math.max(320, w - 10)); if (e.key === "ArrowRight") setSidebarWidth(w => Math.min(500, w + 10)); }} />
+
+      <section className="planner">
+        <div className="plannerHead"><div><h1>Your timetable</h1><p>Choose a section from the search results. Conflicts are flagged before you add.</p></div><div className="plannerActions"><button className="exportButton" disabled={!!exporting} onClick={() => exportTimetable("jpg")}>{exporting === "jpg" ? "Exporting…" : "Export JPG"}</button><button className="exportButton primary" disabled={!!exporting} onClick={() => exportTimetable("pdf")}>{exporting === "pdf" ? "Exporting…" : "Export PDF"}</button>{selected.length > 0 && <button className="clear" onClick={() => setSelected([])}>Clear all</button>}</div></div>
+        <div className="exportSheet" ref={exportRef}>
+        <div className="exportTitle"><b>{partner.plannerTitle} timetable</b><div className="exportMeta"><span>{partner.term.label} · Semester {partner.term.code}</span><strong>{totalNus} NUS MCs · {totalPartnerCredits} {partner.partnerCreditsLabel}</strong></div></div>
+        {unscheduledSelected.length > 0 && <div className="unscheduledNotice"><b>Time not published</b><span>{unscheduledSelected.map(item => `${item.code} · Section ${item.section}`).join(" · ")}</span><small>These modules are selected, but {partner.shortName} has not published meeting times yet, so they cannot be placed or clash-checked.</small></div>}
+        <div className="timetableWrap"><div className="timetable daysAsRows">
+          <div className="corner" />{hours.slice(0, 12).map(hour => <div className="timeHeader" key={hour}>{hour}</div>)}
+          {days.slice(0, 5).map((day, d) => <div className="dayRow" key={day} style={{ gridRow: d + 2 }}><div className="dayLabel">{day}</div>{hours.slice(0, 12).map(hour => <div className="cell" key={hour} />)}</div>)}
+          {previewGroups.map(([key, group]) => <div key={`preview-${key}`} className="ghostStack" style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
+            {group.map(({ section, room }) => <div className="ghostEvent" key={`${section}-${room}`}><b>{previewCode}</b><small>Sec {section} · {room}</small></div>)}
+          </div>)}
+          {timetableGroups.map(([key, group]) => <div key={key} className={`eventStack ${group.length > 1 ? "clash" : ""}`} style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
+            {group.map(({ item, colorIndex, room }) => <button key={item.id} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
+              style={{ background: palette[colorIndex % palette.length] }} title={`${group.length > 1 ? `Clashes with ${group.filter(x => x.item.id !== item.id).map(x => x.item.code).join(", ")} · ` : ""}${previewCode === item.code ? "Click to hide alternative sections" : "Click to preview alternative sections"}`}>
+              <b>{item.code}</b><small>Sec {item.section} · {room}</small>{group.length > 1 && <em>Clash</em>}
+            </button>)}
+          </div>)}
+        </div></div>
+        {selected.length === 0 ? <div className="blank"><span>＋</span><h2>Build your {partner.shortName} week</h2><p>Search a NUS module to find its approved mapping, then pick a {partner.shortName} section.</p></div> :
+          <div className="chosen">{selected.map((item, i) => { const itemMappings = mappings.filter(mapping => [mapping.puCourse1, mapping.puCourse2].some(code => normalize(code) === normalize(item.code))); const itemMapping = itemMappings[0]; const nusCodes = [...new Set(itemMappings.flatMap(mapping => [mapping.nusCourse1, mapping.nusCourse2]).filter(Boolean))]; const nusCredits = itemMapping ? itemMapping.nusCrse1Units + itemMapping.nusCrse2Units : 0; const partnerCredits = itemMapping ? (normalize(itemMapping.puCourse1) === normalize(item.code) ? itemMapping.puCrse1Units : itemMapping.puCrse2Units) : 0; return <div key={item.id} className="chosenItem"><i style={{ background: palette[i % palette.length] }} /><div className="chosenContent"><b>{item.code} · Section {item.section}</b><span>{item.name} · {item.sectionData.instructor}</span><span className="exportCredits">{nusCredits} NUS MCs · {partnerCredits} {partner.partnerCreditUnit}</span><div className="chosenLinks">{nusCodes.map(code => <a key={code} href={`https://nusmods.com/courses/${code}`} target="_blank" rel="noreferrer">NUSMods · {code} ↗</a>)}<a href={partnerCourseUrl(partner, item.code)} target="_blank" rel="noreferrer">{partner.shortName} · {item.code} ↗</a></div></div><button aria-label={`Remove ${item.code}`} onClick={() => setSelected(p => p.filter(x => x.id !== item.id))}>×</button></div>; })}</div>}
+        </div>
+      </section>
+    </div>
+    <button className="mobileSearchTrigger" onClick={() => setMobileSearchOpen(true)}><span>＋</span>Add module to timetable</button>
+    {mobileSearchOpen && <section className="mobileSearchOverlay" aria-label="Search modules"><div className="mobileSearchHeader"><div className="mobileSearchInput"><span>⌕</span><input ref={mobileSearchRef} suppressHydrationWarning value={query} onChange={e => setQuery(e.target.value)} placeholder="Add module to timetable" /></div><button aria-label="Close module search" onClick={() => setMobileSearchOpen(false)}>×</button></div><div className="mobileSearchBody">{!query.trim() ? <div className="mobileSearchHelp"><b>Search all {mappings.length} approved mappings</b><span>Try an NUS or {partner.shortName} module code, or a module title.</span><small>For example: “CS4243”, “CS 484” or “Computer Vision”</small></div> : <><div className="resultMeta"><span>{matches.length} mapping{matches.length === 1 ? "" : "s"}</span>{matches.length > pageSize && <span>Page {page} of {pageCount}</span>}</div>{visibleMatches.map((m, i) => <MappingCard key={`mobile-${m.nusCourse1}-${m.puCourse1}-${i}`} partner={partner} mapping={m} courseByCode={courseByCode} addCourse={(course, section) => { addCourse(course, section); setMobileSearchOpen(false); }} hasConflict={hasConflict} selected={selected} />)}{!matches.length && <div className="emptySmall">No modules match your search.</div>}{pageCount > 1 && <div className="pagination"><button disabled={page === 1} onClick={() => setPage(p => p - 1)}>← Previous</button><span>{page} / {pageCount}</span><button disabled={page === pageCount} onClick={() => setPage(p => p + 1)}>Next →</button></div>}</>}</div></section>}
+    {showAdapterHelp && <div className="modalBackdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowAdapterHelp(false); }}><section className="adapterModal" role="dialog" aria-modal="true" aria-labelledby="adapter-title"><button className="modalClose" aria-label="Close" onClick={() => setShowAdapterHelp(false)}>×</button><span className="modalEyebrow">Open-source adapters</span><h2 id="adapter-title">Map another university</h2><p>The planner is ready for more partner universities. Each one needs a small adapter because course and timetable sources differ.</p><ol><li><b>Fork and clone</b><span>Fork the repository on GitHub, then clone it locally.</span><code>git clone {partner.repositoryUrl}.git</code></li><li><b>Copy the reference adapter</b><span>Duplicate <code>adapters/bilkent</code>, then update its name, term, links and credit labels.</span></li><li><b>Connect official data</b><span>Filter the NUS mapping dataset and translate the university’s public offerings into the documented course/section format.</span></li><li><b>Wire up and verify</b><span>Switch the config/data imports, test links and conflicts, then open a pull request.</span></li></ol><div className="promptBox"><div><b>Let your favourite AI handle the implementation</b><span>Copy a detailed, repository-aware prompt with the requirements and safety checks included.</span></div><button onClick={copyAdapterPrompt}>{copied ? "Copied!" : "Copy AI prompt"}</button></div><span className="adapterDocs">Full schema and checklist: adapters/README.md</span></section></div>}
+  </main>;
+}
+
+function MappingCard({ partner, mapping: m, courseByCode, addCourse, hasConflict, selected }: { partner: PartnerConfig; mapping: Mapping; courseByCode: Map<string, FlatCourse>; addCourse: (c: FlatCourse, s: string) => void; hasConflict: (s: Section, code?: string) => boolean; selected: Selected[] }) {
+  const partnerCodes = [m.puCourse1, m.puCourse2].filter(Boolean);
+  const availableCourses = partnerCodes.map(code => courseByCode.get(normalize(code))).filter((course): course is FlatCourse => Boolean(course));
+  const cardSelected = availableCourses.some(course => selected.some(item => item.code === course.code));
+  const toggleCard = () => {
+    if (cardSelected) {
+      availableCourses.forEach(course => { const selectedCourse = selected.find(item => item.code === course.code); if (selectedCourse) addCourse(course, selectedCourse.section); });
+      return;
+    }
+    availableCourses.forEach(course => { const defaultSection = course.sections["1"] ? "1" : Object.keys(course.sections)[0]; if (defaultSection) addCourse(course, defaultSection); });
+  };
+  return <article className={`mappingCard ${availableCourses.length ? "clickableCard" : ""} ${cardSelected ? "selectedCard" : ""}`} tabIndex={availableCourses.length ? 0 : undefined}
+    aria-label={availableCourses.length ? `${cardSelected ? "Remove" : "Add"} ${m.puCourse1}${cardSelected ? "" : " with its default section"}` : undefined}
+    onClick={availableCourses.length ? toggleCard : undefined}
+    onKeyDown={availableCourses.length ? e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(); } } : undefined}>
+    <div className="mappingTop"><div className="mappingStatus"><span className="approved">Approved mapping</span>{cardSelected && <span className="selectedIndicator">Selected</span>}</div><span>{m.faculty.replace("College of Design and Engineering", "CDE")}</span></div>
+    <div className="pair">
+      <Module side="NUS" code={m.nusCourse1} title={m.nusCourse1Title} credits={m.nusCrse1Units} href={`https://nusmods.com/courses/${m.nusCourse1}`} />
+      <span className="arrow">↔</span>
+      <Module side={partner.shortName} code={m.puCourse1} title={m.puCourse1Title} credits={m.puCrse1Units} creditUnit={partner.partnerCreditUnit} href={partnerCourseUrl(partner, m.puCourse1)} />
+    </div>
+    {(m.nusCourse2 || m.puCourse2) && <div className="secondary">Also: {m.nusCourse2 || "—"} ↔ {m.puCourse2 || "—"}</div>}
+    {partnerCodes.map(code => { const course = courseByCode.get(normalize(code)); return course ? <Sections key={code} course={course} addCourse={addCourse} hasConflict={hasConflict} selected={selected} /> : <p className="unavailable" key={code}>{code} is not offered this term</p>; })}
+  </article>;
+}
+function Module({ side, code, title, credits, href, creditUnit }: { side: string; code: string; title: string; credits: number; href: string; creditUnit?: string }) {
+  return <div className="module"><small>{side}</small><a href={href} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{code} ↗</a><span>{title}</span>{credits > 0 && <em>{credits} {side === "NUS" ? "MCs" : creditUnit}</em>}</div>;
+}
+function Sections({ course, addCourse, hasConflict, selected }: { course: FlatCourse; addCourse: (c: FlatCourse, s: string) => void; hasConflict: (s: Section, code?: string) => boolean; selected: Selected[] }) {
+  return <div className="sections"><span className="sectionsLabel">Sections<small>Tap card for Section 1, or choose</small></span>{Object.entries(course.sections).map(([number, section]) => { const active = selected.some(x => x.code === course.code && x.section === number); const conflict = hasConflict(section, course.code); const meetingSlots = slots(section); return <button key={number} className={active ? "active" : conflict ? "conflict" : meetingSlots.length === 0 ? "tba" : ""} onClick={e => { e.stopPropagation(); addCourse(course, number); }} title={meetingSlots.length === 0 ? `${section.instructor} · Schedule TBA` : `${conflict ? "Conflict · " : ""}${section.instructor} · ${meetingSlots.map(s => `${days[s.day]} ${hours[s.hour]}`).join(", ")}`}><b>{number}</b></button>; })}</div>;
+}

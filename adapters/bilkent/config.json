@@ -1,0 +1,18 @@
+{
+  "id": "bilkent",
+  "name": "Bilkent University",
+  "shortName": "Bilkent",
+  "plannerTitle": "NUS Bilkent",
+  "mark": "NB",
+  "term": {
+    "code": "20261",
+    "label": "2026–27 Fall"
+  },
+  "partnerCreditsLabel": "Bilkent credits",
+  "partnerCreditUnit": "credits",
+  "courseUrlTemplate": "https://stars.bilkent.edu.tr/homepage/courses.php?DEPT={department}#{code}",
+  "offeringsSource": "https://stars.bilkent.edu.tr/homepage/plain_offerings",
+  "storageKey": "nus-bilkent-planner-state-v1",
+  "exportSlug": "nus-bilkent-timetable",
+  "repositoryUrl": "https://github.com/raihahahan/nus-bilkent-mods"
+}

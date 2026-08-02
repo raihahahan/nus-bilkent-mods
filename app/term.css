@@ -1,0 +1,62 @@
+.termBadge {
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.termBadge span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.termBadge small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.schoolLabel {
+  margin-top: 12px;
+}
+
+.schoolFilter {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ccd1dc;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.offeredFilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 11px 1px 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.offeredFilter input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+@media (max-width: 900px) {
+  aside {
+    display: none;
+  }
+
+}
