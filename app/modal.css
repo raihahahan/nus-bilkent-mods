@@ -1,7 +1,11 @@
-.headerRight {
+.topbar .headerRight {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
+}
+
+.totals span + span {
+  margin-left: 18px;
 }
 
 .githubLink {

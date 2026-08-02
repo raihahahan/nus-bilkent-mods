@@ -19,7 +19,7 @@ type Selected = { id: string; code: string; name: string; section: string; secti
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hours = Array.from({ length: 14 }, (_, i) => `${String(i + 8).padStart(2, "0")}:30`);
 const timeRange = (hourIndex: number) => `${hours[hourIndex]}–${String(hourIndex + 9).padStart(2, "0")}:20`;
-const timelineLabels = Array.from({ length: 13 }, (_, index) => `${String(index + 8).padStart(2, "0")}00`);
+const timelineLabels = Array.from({ length: 13 }, (_, index) => `${String(index + 8).padStart(2, "0")}30`);
 const palette = ["#3d64f4", "#dc5c3f", "#099779", "#8a55cc", "#c28205", "#277b9b"];
 const alternativePalette = [
   { border: "#3158e8", background: "#dfe6ffcc", text: "#2645ad" },
