@@ -1,0 +1,28 @@
+{
+  "id": "ucr",
+  "name": "University of California, Riverside",
+  "shortName": "UC Riverside",
+  "plannerTitle": "UC Riverside",
+  "mark": "NR",
+  "term": {
+    "code": "202640",
+    "label": "Fall 2026"
+  },
+  "partnerCreditsLabel": "UCR units",
+  "partnerCreditUnit": "units",
+  "courseUrlTemplate": "https://registrationssb.ucr.edu/StudentRegistrationSsb/ssb/classSearch/classSearch",
+  "offeringsSource": "https://registrationssb.ucr.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
+  "dataUpdatedAt": "2026-08-02T10:13:43.175Z",
+  "importantDocumentUrl": "https://nus.edu.sg/gro/docs/default-source/prog/sep/pu/us/sep_usa_university_of_california.pdf",
+  "importantDocumentLabel": "NUS University of California exchange information",
+  "partnerPortalUrl": "https://registrationssb.ucr.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
+  "partnerPortalLabel": "UCR class search",
+  "timetable": {
+    "startMinutes": 480,
+    "endMinutes": 1320,
+    "labelMinute": 0
+  },
+  "storageKey": "nus-ucr-planner-state-v1",
+  "exportSlug": "nus-ucr-timetable",
+  "repositoryUrl": "https://github.com/raihahahan/nus-bilkent-mods"
+}

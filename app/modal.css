@@ -158,9 +158,10 @@
 
 .sections .sectionsLabel {
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 0 100%;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .sections .sectionsLabel small {
@@ -169,6 +170,17 @@
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
+  white-space: normal;
+}
+
+.sections {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.sections button {
+  flex: 0 0 auto;
+  max-width: 100%;
   white-space: nowrap;
 }
 

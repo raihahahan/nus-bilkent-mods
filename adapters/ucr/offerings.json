@@ -1,0 +1,948 @@
+{
+  "CS": {
+    "CS 061": {
+      "name": "MACHINE ORGANIZATION AND ASSEMBLY LANGUAGE PROGRAMMING",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Dai, Huangliang, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 570,
+              "endMinutes": 650,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 720,
+              "endMinutes": 830,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Dai, Huangliang, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 570,
+              "endMinutes": 650,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 600,
+              "endMinutes": 710,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.3": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Dai, Huangliang, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 570,
+              "endMinutes": 650,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 1080,
+              "endMinutes": 1190,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.4": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Dai, Huangliang, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 570,
+              "endMinutes": 650,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 840,
+              "endMinutes": 950,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.1": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Nguyen, Nghia, Dai, Huangliang, Tan, Sixu, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 600,
+              "endMinutes": 710,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.2": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Nguyen, Nghia, Dai, Huangliang, Tan, Sixu, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 840,
+              "endMinutes": 950,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.3": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Nguyen, Nghia, Dai, Huangliang, Tan, Sixu, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 720,
+              "endMinutes": 830,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.4": {
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Saberlatibari, Javad, Nguyen, Nghia, Dai, Huangliang, Tan, Sixu, Yang, Zhaorui",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 1080,
+              "endMinutes": 1190,
+              "room": "UTLF 0203",
+              "type": "Laboratory"
+            }
+          ]
+        }
+      }
+    },
+    "CS 100": {
+      "name": "SOFTWARE CONSTRUCTION",
+      "credits": 5,
+      "sections": {
+        "001.1": {
+          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley, Chan, Eric",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1100,
+              "room": "CHUNG 138",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 540,
+              "endMinutes": 590,
+              "room": "SOM2 205",
+              "type": "Discussion"
+            },
+            {
+              "days": [
+                4
+              ],
+              "startMinutes": 600,
+              "endMinutes": 710,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley, Chan, Eric",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1100,
+              "room": "CHUNG 138",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 540,
+              "endMinutes": 590,
+              "room": "SOM2 205",
+              "type": "Discussion"
+            },
+            {
+              "days": [
+                4
+              ],
+              "startMinutes": 840,
+              "endMinutes": 950,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.1": {
+          "instructor": "Knight, Allan, Wolf, Kimberley, Nazaraliyev, Ravan",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "SPR 1102",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 600,
+              "endMinutes": 650,
+              "room": "SOM2 205",
+              "type": "Discussion"
+            },
+            {
+              "days": [
+                4
+              ],
+              "startMinutes": 720,
+              "endMinutes": 830,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "002.2": {
+          "instructor": "Knight, Allan, Wolf, Kimberley, Nazaraliyev, Ravan",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "SPR 1102",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 600,
+              "endMinutes": 650,
+              "room": "SOM2 205",
+              "type": "Discussion"
+            },
+            {
+              "days": [
+                4
+              ],
+              "startMinutes": 960,
+              "endMinutes": 1070,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        }
+      }
+    },
+    "CS 130": {
+      "name": "COMPUTER GRAPHICS",
+      "credits": 4,
+      "sections": {
+        "001": {
+          "instructor": "Schroeder, Craig",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "UTLF 0415",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 960,
+              "endMinutes": 1010,
+              "room": "UTLF 0303",
+              "type": "Discussion"
+            }
+          ]
+        }
+      }
+    },
+    "CS 153": {
+      "name": "DESIGN OF OPERATING SYSTEMS",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "SSC 335",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                1
+              ],
+              "startMinutes": 960,
+              "endMinutes": 1070,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "SSC 335",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1130,
+              "room": "UTLF 0204",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.3": {
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "SSC 335",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 840,
+              "endMinutes": 950,
+              "room": "UTLF 0215",
+              "type": "Laboratory"
+            }
+          ]
+        }
+      }
+    },
+    "CS 160": {
+      "name": "CONCURRENT PROGRAMMING AND PARALLEL SYSTEMS",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Zhao, Zhijia",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "UTLF 0403",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 600,
+              "endMinutes": 710,
+              "room": "UTLF 0409",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Zhao, Zhijia",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 740,
+              "room": "UTLF 0403",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 720,
+              "endMinutes": 830,
+              "room": "UTLF 0413",
+              "type": "Laboratory"
+            }
+          ]
+        }
+      }
+    },
+    "CS 166": {
+      "name": "DATABASE MANAGEMENT SYSTEMS",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Salloum, Mariam, Bian, Yiyang",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 480,
+              "endMinutes": 560,
+              "room": "SSC 335",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 900,
+              "endMinutes": 1010,
+              "room": "UTLF 0303",
+              "type": "Laboratory"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Salloum, Mariam, Bian, Yiyang",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 480,
+              "endMinutes": 560,
+              "room": "SSC 335",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                1
+              ],
+              "startMinutes": 900,
+              "endMinutes": 1010,
+              "room": "UTLF 0303",
+              "type": "Laboratory"
+            }
+          ]
+        }
+      }
+    },
+    "CS 170": {
+      "name": "INTRODUCTION TO ARTIFICIAL INTELLIGENCE",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Wolf, Kimberley, Thakuria, Partha, Islam, Mohammad Jaminur, Li, Weizi",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "SSC 329",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "UTLF 0315",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Wolf, Kimberley, Thakuria, Partha, Islam, Mohammad Jaminur, Li, Weizi",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "SSC 329",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 840,
+              "endMinutes": 890,
+              "room": "UTLF 0303",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.3": {
+          "instructor": "Wolf, Kimberley, Thakuria, Partha, Islam, Mohammad Jaminur, Li, Weizi",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "SSC 329",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 1080,
+              "endMinutes": 1130,
+              "room": "UTLF 0315",
+              "type": "Discussion"
+            }
+          ]
+        }
+      }
+    },
+    "CS 171": {
+      "name": "INTRODUCTION TO MACHINE LEARNING AND DATA MINING",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Roy Chowdhury, Amit, Wolf, Kimberley, Gutierrez-Pasillas, Miguel, Shahgir, Haz Sameen",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 840,
+              "endMinutes": 890,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 660,
+              "endMinutes": 710,
+              "room": "UTLF 0203",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Roy Chowdhury, Amit, Wolf, Kimberley, Gutierrez-Pasillas, Miguel, Shahgir, Haz Sameen",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 840,
+              "endMinutes": 890,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                2
+              ],
+              "startMinutes": 1140,
+              "endMinutes": 1190,
+              "room": "UTLF 0315",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.3": {
+          "instructor": "Roy Chowdhury, Amit, Wolf, Kimberley, Gutierrez-Pasillas, Miguel, Shahgir, Haz Sameen",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 840,
+              "endMinutes": 890,
+              "room": "SSC 235",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 1080,
+              "endMinutes": 1130,
+              "room": "UTLF 0303",
+              "type": "Discussion"
+            }
+          ]
+        }
+      }
+    },
+    "CS 182": {
+      "name": "SOFTWARE TESTING AND VERIFICATION",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "Qiu, Yuxin, Zhang, Qian",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2
+              ],
+              "startMinutes": 750,
+              "endMinutes": 830,
+              "room": "UTLF 0403",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                1
+              ],
+              "startMinutes": 900,
+              "endMinutes": 950,
+              "room": "WAT 1111",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "Qiu, Yuxin, Zhang, Qian",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2
+              ],
+              "startMinutes": 750,
+              "endMinutes": 830,
+              "room": "UTLF 0403",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                1
+              ],
+              "startMinutes": 780,
+              "endMinutes": 830,
+              "room": "UTLF 0215",
+              "type": "Discussion"
+            }
+          ]
+        }
+      }
+    },
+    "CS 205": {
+      "name": "ARTIFICIAL INTELLIGENCE",
+      "credits": 4,
+      "sections": {
+        "001": {
+          "instructor": "Dong, Yue",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 840,
+              "endMinutes": 920,
+              "room": "WAT 1000",
+              "type": "Lecture"
+            }
+          ]
+        }
+      }
+    },
+    "CS 214": {
+      "name": "PARALLEL ALGORITHMS",
+      "credits": 4,
+      "sections": {
+        "001": {
+          "instructor": "Sun, Yihan",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                1,
+                3
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1100,
+              "room": "BOYHL 1471",
+              "type": "Lecture"
+            }
+          ]
+        }
+      }
+    },
+    "CS 224": {
+      "name": "FOUNDATIONS OF MACHINE LEARNING",
+      "credits": 4,
+      "sections": {
+        "001": {
+          "instructor": "Ver Steeg, Gregory",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2
+              ],
+              "startMinutes": 930,
+              "endMinutes": 1010,
+              "room": "WAT 1000",
+              "type": "Lecture"
+            }
+          ]
+        }
+      }
+    },
+    "CS 236": {
+      "name": "DATABASE MANAGEMENT SYSTEMS",
+      "credits": 4,
+      "sections": {
+        "001": {
+          "instructor": "Tsotras, Vassilis",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1100,
+              "room": "MSE 103",
+              "type": "Lecture"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "MATH": {
+    "MATH 120": {
+      "name": "OPTIMIZATION",
+      "credits": 4,
+      "sections": {
+        "001.1": {
+          "instructor": "TBA",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "SSC 216",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 960,
+              "endMinutes": 1010,
+              "room": "MSE 113",
+              "type": "Discussion"
+            }
+          ]
+        },
+        "001.2": {
+          "instructor": "TBA",
+          "schedule": {},
+          "meetings": [
+            {
+              "days": [
+                0,
+                2,
+                4
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "SSC 216",
+              "type": "Lecture"
+            },
+            {
+              "days": [
+                3
+              ],
+              "startMinutes": 1020,
+              "endMinutes": 1070,
+              "room": "MSE 113",
+              "type": "Discussion"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

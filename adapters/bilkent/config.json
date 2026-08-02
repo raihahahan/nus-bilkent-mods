@@ -2,7 +2,7 @@
   "id": "bilkent",
   "name": "Bilkent University",
   "shortName": "Bilkent",
-  "plannerTitle": "NUS Bilkent",
+  "plannerTitle": "Bilkent",
   "mark": "NB",
   "term": {
     "code": "20261",
@@ -17,6 +17,11 @@
   "importantDocumentLabel": "NUS Bilkent exchange information",
   "partnerPortalUrl": "https://stars.bilkent.edu.tr/",
   "partnerPortalLabel": "Bilkent course portal",
+  "timetable": {
+    "startMinutes": 510,
+    "endMinutes": 1230,
+    "labelMinute": 30
+  },
   "storageKey": "nus-bilkent-planner-state-v1",
   "exportSlug": "nus-bilkent-timetable",
   "repositoryUrl": "https://github.com/raihahahan/nus-bilkent-mods"

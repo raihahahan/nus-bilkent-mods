@@ -14,6 +14,7 @@ export type PartnerConfig = {
   importantDocumentLabel: string;
   partnerPortalUrl: string;
   partnerPortalLabel: string;
+  timetable: { startMinutes: number; endMinutes: number; labelMinute: number };
   storageKey: string;
   exportSlug: string;
   repositoryUrl: string;

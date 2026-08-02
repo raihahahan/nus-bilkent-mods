@@ -4,11 +4,11 @@ import "./term.css";
 import "./export.css";
 import "./modal.css";
 import "./mobile-search.css";
-import { activeAdapter } from "@/adapters/active";
+import "./dark.css";
 
 export const metadata: Metadata = {
-  title: `${activeAdapter.config.plannerTitle} Planner`,
-  description: `Find approved module mappings and build a ${activeAdapter.config.shortName} timetable.`,
+  title: "NUS SEP Planner",
+  description: "Find approved NUS exchange module mappings and build a partner-university timetable.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

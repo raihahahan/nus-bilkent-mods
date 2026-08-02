@@ -1,6 +1,6 @@
 # Partner university adapters
 
-The planner UI consumes one normalized partner configuration and two normalized datasets. Bilkent is the reference adapter in `adapters/bilkent/`.
+The planner UI consumes normalized partner configurations and datasets registered in `adapters/index.ts`. Bilkent is the original reference adapter. UC Riverside demonstrates exact-time meetings and linked lecture, lab and discussion choices.
 
 To add a university:
 

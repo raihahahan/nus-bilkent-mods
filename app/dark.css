@@ -1,0 +1,161 @@
+.themeToggle {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.themeToggle:hover {
+  border-color: var(--ink);
+  background: var(--soft);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #edf1fb;
+  --muted: #a1abc0;
+  --line: #343d50;
+  --soft: #242b39;
+  --blue: #7892ff;
+  --green: #5bd5b2;
+}
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] main,
+:root[data-theme="dark"] .planner {
+  background: #111722;
+}
+
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] aside,
+:root[data-theme="dark"] .asideHead,
+:root[data-theme="dark"] .results {
+  background: #171e2a;
+}
+
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] .topbar .partnerSelect,
+:root[data-theme="dark"] .schoolFilter,
+:root[data-theme="dark"] .search,
+:root[data-theme="dark"] .mappingCard,
+:root[data-theme="dark"] .clickableCard.selectedCard,
+:root[data-theme="dark"] .sections button,
+:root[data-theme="dark"] .pagination button,
+:root[data-theme="dark"] .clear,
+:root[data-theme="dark"] .exportButton,
+:root[data-theme="dark"] .addPartnerButton,
+:root[data-theme="dark"] .adaptButton,
+:root[data-theme="dark"] .chosenItem,
+:root[data-theme="dark"] .timetable,
+:root[data-theme="dark"] .adapterModal,
+:root[data-theme="dark"] .promptBox pre {
+  border-color: var(--line);
+  background-color: #1b2331;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .topbar .partnerSelect {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='m3 5 4 4 4-4' fill='none' stroke='%23edf1fb' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="dark"] .search input {
+  background: transparent;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .approved {
+  background: #15382f;
+}
+
+:root[data-theme="dark"] .bilkentOnly,
+:root[data-theme="dark"] .selectedIndicator,
+:root[data-theme="dark"] .sections button:hover,
+:root[data-theme="dark"] .sections button.active {
+  background: #293555;
+}
+
+:root[data-theme="dark"] .sections button.conflict {
+  background: #3c2829;
+}
+
+:root[data-theme="dark"] .promptBox {
+  border-color: #3c496b;
+  background: #202a42;
+}
+
+:root[data-theme="dark"] .unscheduledNotice {
+  border-color: #594728;
+  background: #332b1e;
+}
+
+:root[data-theme="dark"] .mobileSearchOverlay {
+  background: #111722;
+}
+
+:root[data-theme="dark"] .mobileSearchHeader,
+:root[data-theme="dark"] .mobileSearchInput {
+  background: #171e2a;
+}
+
+:root[data-theme="dark"] .modalBackdrop {
+  background: #05080dcc;
+}
+
+:root[data-theme="dark"] .event {
+  box-shadow: 0 1px 3px #0008;
+}
+
+:root[data-theme="dark"] .timetableWrap {
+  background: #171e2a;
+}
+
+:root[data-theme="dark"] .timetable.daysAsRows {
+  background: #202938;
+}
+
+:root[data-theme="dark"] .daysAsRows .corner,
+:root[data-theme="dark"] .daysAsRows .timeHeader,
+:root[data-theme="dark"] .daysAsRows .dayLabel {
+  background: #202938;
+}
+
+:root[data-theme="dark"] .daysAsRows .cell,
+:root[data-theme="dark"] .daysAsRows .cell:nth-child(odd) {
+  background: #171e2a;
+}
+
+:root[data-theme="dark"] .daysAsRows .cell:nth-child(even) {
+  background: #1a2230;
+}
+
+/* Exports stay print-friendly regardless of the on-screen theme. */
+:root[data-theme="dark"] .exportSheet.isExporting {
+  --ink: #182033;
+  --muted: #687086;
+  --line: #e4e7ee;
+  --soft: #f6f7fa;
+  background: #fff;
+  color: #182033;
+}
+
+:root[data-theme="dark"] .exportSheet.isExporting .timetable,
+:root[data-theme="dark"] .exportSheet.isExporting .chosenItem {
+  background: #fff;
+  color: #182033;
+}
+
+:root[data-theme="dark"] .exportSheet.isExporting .daysAsRows .cell {
+  background: #fff;
+}
+
+:root[data-theme="dark"] .exportSheet.isExporting .daysAsRows .cell:nth-child(odd) {
+  background: #fafbfc;
+}
