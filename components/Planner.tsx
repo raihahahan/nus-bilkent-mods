@@ -40,8 +40,15 @@ const faculties = [
 ] as const;
 
 function normalize(code: string) { return code.replace(/\s+/g, "").toUpperCase(); }
-function utcTimestamp(isoDate: string) {
-  return `${isoDate.slice(0, 10)} ${isoDate.slice(11, 16)} UTC`;
+function dataTimestamp(isoDate: string, useBrowserTimezone: boolean) {
+  if (!useBrowserTimezone) return `${isoDate.slice(0, 10)} ${isoDate.slice(11, 16)} UTC`;
+  const date = new Date(isoDate);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const offsetMinutes = -date.getTimezoneOffset();
+  const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
+  const remainingMinutes = Math.abs(offsetMinutes) % 60;
+  const offset = offsetMinutes === 0 ? "UTC" : `UTC${offsetMinutes > 0 ? "+" : "-"}${offsetHours}${remainingMinutes ? `:${pad(remainingMinutes)}` : ""}`;
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())} ${offset}`;
 }
 function slots(section: Section) {
   return Object.entries(section.schedule).map(([raw, room]) => {
@@ -312,7 +319,7 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
         onKeyDown={e => { if (e.key === "ArrowLeft") setSidebarWidth(w => Math.max(320, w - 10)); if (e.key === "ArrowRight") setSidebarWidth(w => Math.min(500, w + 10)); }} />
 
       <section className="planner">
-        <div className="plannerHead"><div><h1>Your timetable</h1><p>Choose a section from the search results. Conflicts are flagged before you add.</p><div className="plannerResources"><a href={partner.importantDocumentUrl} target="_blank" rel="noreferrer">{partner.importantDocumentLabel} ↗</a><span>Data last updated <time dateTime={partner.dataUpdatedAt}>{utcTimestamp(partner.dataUpdatedAt)}</time></span></div></div><div className="plannerActions"><button className="exportButton" disabled={!!exporting} onClick={() => exportTimetable("jpg")}>{exporting === "jpg" ? "Exporting…" : "Export JPG"}</button><button className="exportButton primary" disabled={!!exporting} onClick={() => exportTimetable("pdf")}>{exporting === "pdf" ? "Exporting…" : "Export PDF"}</button>{selected.length > 0 && <button className="clear" onClick={() => setSelected([])}>Clear all</button>}</div></div>
+        <div className="plannerHead"><div><h1>Your timetable</h1><p>Choose a section from the search results. Conflicts are flagged before you add.</p><div className="plannerResources"><a href={partner.importantDocumentUrl} target="_blank" rel="noreferrer">{partner.importantDocumentLabel} ↗</a><a href={partner.partnerPortalUrl} target="_blank" rel="noreferrer">{partner.partnerPortalLabel} ↗</a><span>Data last updated <time dateTime={partner.dataUpdatedAt} title={`${partner.dataUpdatedAt.slice(0, 16).replace("T", " ")} UTC`}>{dataTimestamp(partner.dataUpdatedAt, hydrated)}</time></span></div></div><div className="plannerActions"><button className="exportButton" disabled={!!exporting} onClick={() => exportTimetable("jpg")}>{exporting === "jpg" ? "Exporting…" : "Export JPG"}</button><button className="exportButton primary" disabled={!!exporting} onClick={() => exportTimetable("pdf")}>{exporting === "pdf" ? "Exporting…" : "Export PDF"}</button>{selected.length > 0 && <button className="clear" onClick={() => setSelected([])}>Clear all</button>}</div></div>
         <div className="exportSheet" ref={exportRef}>
         <div className="exportTitle"><b>{partner.plannerTitle} timetable</b><div className="exportMeta"><span>{partner.term.label} · Semester {partner.term.code}</span><strong>{totalNus} NUS MCs · {totalPartnerCredits} {partner.partnerCreditsLabel}</strong></div></div>
         {unscheduledSelected.length > 0 && <div className="unscheduledNotice"><b>Time not published</b><span>{unscheduledSelected.map(item => `${item.code} · Section ${item.section}`).join(" · ")}</span><small>These modules are selected, but {partner.shortName} has not published meeting times yet, so they cannot be placed or clash-checked.</small></div>}

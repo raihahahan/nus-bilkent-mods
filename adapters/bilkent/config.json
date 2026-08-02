@@ -15,6 +15,8 @@
   "dataUpdatedAt": "2026-08-02T06:59:54Z",
   "importantDocumentUrl": "https://www.nus.edu.sg/gro/docs/default-source/prog/sep/pu/tr/sep_turkey_bilkent.pdf",
   "importantDocumentLabel": "NUS Bilkent exchange information",
+  "partnerPortalUrl": "https://stars.bilkent.edu.tr/",
+  "partnerPortalLabel": "Bilkent course portal",
   "storageKey": "nus-bilkent-planner-state-v1",
   "exportSlug": "nus-bilkent-timetable",
   "repositoryUrl": "https://github.com/raihahahan/nus-bilkent-mods"

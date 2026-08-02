@@ -12,6 +12,8 @@ export type PartnerConfig = {
   dataUpdatedAt: string;
   importantDocumentUrl: string;
   importantDocumentLabel: string;
+  partnerPortalUrl: string;
+  partnerPortalLabel: string;
   storageKey: string;
   exportSlug: string;
   repositoryUrl: string;
