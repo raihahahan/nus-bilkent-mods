@@ -179,9 +179,9 @@
 }
 
 .timetable.daysAsRows {
-  grid-template-columns: 72px repeat(12, minmax(62px, 1fr));
-  grid-template-rows: 42px repeat(5, 74px);
-  min-width: 816px;
+  grid-template-columns: 72px repeat(75, minmax(15px, 1fr));
+  grid-template-rows: 52px repeat(5, 74px);
+  min-width: 1197px;
 }
 
 .daysAsRows .corner,
@@ -194,21 +194,40 @@
   position: sticky;
   left: 0;
   z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.daysAsRows .corner small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 500;
 }
 
 .daysAsRows .timeHeader {
-  display: grid;
-  place-items: center;
-  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   color: var(--muted);
-  font-size: 9px;
-  font-weight: 650;
+}
+
+.daysAsRows .timeHeader b {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .daysAsRows .dayRow {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 72px repeat(12, minmax(62px, 1fr));
+  grid-template-columns: 72px repeat(25, minmax(45px, 1fr));
   pointer-events: none;
 }
 
@@ -228,6 +247,10 @@
   border-right: 0;
   border-left: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+}
+
+.daysAsRows .cell:nth-child(odd) {
+  background: #fafbfc;
 }
 
 .eventStack .event {

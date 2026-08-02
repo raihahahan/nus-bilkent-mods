@@ -18,6 +18,8 @@ type Selected = { id: string; code: string; name: string; section: string; secti
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hours = Array.from({ length: 14 }, (_, i) => `${String(i + 8).padStart(2, "0")}:30`);
+const timeRange = (hourIndex: number) => `${hours[hourIndex]}–${String(hourIndex + 9).padStart(2, "0")}:20`;
+const timelineLabels = Array.from({ length: 13 }, (_, index) => `${String(index + 8).padStart(2, "0")}00`);
 const palette = ["#3d64f4", "#dc5c3f", "#099779", "#8a55cc", "#c28205", "#277b9b"];
 const alternativePalette = [
   { border: "#3158e8", background: "#dfe6ffcc", text: "#2645ad" },
@@ -42,6 +44,19 @@ function slots(section: Section) {
     const index = Number(raw);
     return { day: index % 7, hour: Math.floor(index / 7), room };
   });
+}
+function consecutiveBlocks(section: Section) {
+  const ordered = slots(section).filter(slot => slot.day < 5 && slot.hour < 12)
+    .sort((a, b) => a.day - b.day || a.hour - b.hour);
+  return ordered.reduce<{ day: number; hour: number; length: number; room: string }[]>((blocks, slot) => {
+    const previous = blocks[blocks.length - 1];
+    if (previous && previous.day === slot.day && previous.room === slot.room && previous.hour + previous.length === slot.hour) {
+      previous.length += 1;
+    } else {
+      blocks.push({ ...slot, length: 1 });
+    }
+    return blocks;
+  }, []);
 }
 
 export default function Planner({ partner, mappings, offerings }: { partner: PartnerConfig; mappings: Mapping[]; offerings: Record<string, Offerings> }) {
@@ -211,11 +226,11 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
     return sum + (m ? (normalize(m.puCourse1) === normalize(item.code) ? m.puCrse1Units : m.puCrse2Units) : 0);
   }, 0);
   const timetableGroups = useMemo(() => {
-    const groups = new Map<string, { item: Selected; colorIndex: number; day: number; hour: number; room: string }[]>();
-    selected.forEach((item, colorIndex) => slots(item.sectionData).filter(slot => slot.day < 5 && slot.hour < 12).forEach(slot => {
-      const key = `${slot.day}-${slot.hour}`;
+    const groups = new Map<string, { item: Selected; colorIndex: number; day: number; hour: number; length: number; room: string }[]>();
+    selected.forEach((item, colorIndex) => consecutiveBlocks(item.sectionData).forEach(block => {
+      const key = `${block.day}-${block.hour}-${block.length}`;
       const group = groups.get(key) ?? [];
-      group.push({ item, colorIndex, ...slot });
+      group.push({ item, colorIndex, ...block });
       groups.set(key, group);
     }));
     return [...groups.entries()];
@@ -226,12 +241,12 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
     const selectedCourse = selected.find(item => item.code === previewCode);
     const course = courseByCode.get(normalize(previewCode));
     if (!selectedCourse || !course) return [];
-    const groups = new Map<string, { section: string; colorIndex: number; day: number; hour: number; room: string }[]>();
+    const groups = new Map<string, { section: string; colorIndex: number; day: number; hour: number; length: number; room: string }[]>();
     Object.entries(course.sections).filter(([section]) => section !== selectedCourse.section).forEach(([section, sectionData], colorIndex) => {
-      slots(sectionData).filter(slot => slot.day < 5 && slot.hour < 12).forEach(slot => {
-        const key = `${slot.day}-${slot.hour}`;
+      consecutiveBlocks(sectionData).forEach(block => {
+        const key = `${block.day}-${block.hour}-${block.length}`;
         const group = groups.get(key) ?? [];
-        group.push({ section, colorIndex, ...slot });
+        group.push({ section, colorIndex, ...block });
         groups.set(key, group);
       });
     });
@@ -287,15 +302,15 @@ Do not invent offerings or meeting times. Prefer official sources and keep partn
         <div className="exportTitle"><b>{partner.plannerTitle} timetable</b><div className="exportMeta"><span>{partner.term.label} · Semester {partner.term.code}</span><strong>{totalNus} NUS MCs · {totalPartnerCredits} {partner.partnerCreditsLabel}</strong></div></div>
         {unscheduledSelected.length > 0 && <div className="unscheduledNotice"><b>Time not published</b><span>{unscheduledSelected.map(item => `${item.code} · Section ${item.section}`).join(" · ")}</span><small>These modules are selected, but {partner.shortName} has not published meeting times yet, so they cannot be placed or clash-checked.</small></div>}
         <div className="timetableWrap"><div className="timetable daysAsRows">
-          <div className="corner" />{hours.slice(0, 12).map(hour => <div className="timeHeader" key={hour}>{hour}</div>)}
-          {days.slice(0, 5).map((day, d) => <div className="dayRow" key={day} style={{ gridRow: d + 2 }}><div className="dayLabel">{day}</div>{hours.slice(0, 12).map(hour => <div className="cell" key={hour} />)}</div>)}
-          {previewGroups.map(([key, group]) => <div key={`preview-${key}`} className="ghostStack" style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
-            {group.map(({ section, colorIndex, room }) => { const color = alternativePalette[colorIndex % alternativePalette.length]; return <button type="button" className="ghostEvent" key={`${section}-${room}`} onClick={() => choosePreviewSection(section)} style={{ borderColor: color.border, background: color.background, color: color.text }} title={`Switch ${previewCode} to Section ${section}`}><b>{previewCode}</b><small>Sec {section} · {room}</small></button>; })}
+          <div className="corner"><span>Day</span><small>Class time</small></div>{timelineLabels.map((label, index) => <div className="timeHeader" key={label} style={{ gridColumn: `${index * 6 + 2} / span ${index === timelineLabels.length - 1 ? 3 : 6}` }}><b>{label}</b></div>)}
+          {days.slice(0, 5).map((day, d) => <div className="dayRow" key={day} style={{ gridRow: d + 2 }}><div className="dayLabel">{day}</div>{Array.from({ length: 25 }, (_, index) => <div className="cell" key={index} />)}</div>)}
+          {previewGroups.map(([key, group]) => <div key={`preview-${key}`} className="ghostStack" style={{ gridColumn: `${group[0].hour * 6 + 5} / span ${group[0].length * 6 - 1}`, gridRow: group[0].day + 2 }}>
+            {group.map(({ section, colorIndex, room, hour, length }) => { const color = alternativePalette[colorIndex % alternativePalette.length]; return <button type="button" className="ghostEvent" key={`${section}-${room}`} onClick={() => choosePreviewSection(section)} style={{ borderColor: color.border, background: color.background, color: color.text }} title={`Switch ${previewCode} to Section ${section}`}><b>{previewCode}</b><small>Sec {section} · {room}</small><small>{hours[hour]}–{String(hour + length + 8).padStart(2, "0")}:20</small></button>; })}
           </div>)}
-          {timetableGroups.map(([key, group]) => <div key={key} className={`eventStack ${group.length > 1 ? "clash" : ""}`} style={{ gridColumn: group[0].hour + 2, gridRow: group[0].day + 2 }}>
-            {group.map(({ item, colorIndex, room }) => <button key={item.id} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
+          {timetableGroups.map(([key, group]) => <div key={key} className={`eventStack ${group.length > 1 ? "clash" : ""}`} style={{ gridColumn: `${group[0].hour * 6 + 5} / span ${group[0].length * 6 - 1}`, gridRow: group[0].day + 2 }}>
+            {group.map(({ item, colorIndex, room, hour, length }) => <button key={item.id} className={`event ${previewCode === item.code ? "previewing" : ""}`} onClick={() => setPreviewCode(code => code === item.code ? null : item.code)}
               style={{ background: palette[colorIndex % palette.length] }} title={`${group.length > 1 ? `Clashes with ${group.filter(x => x.item.id !== item.id).map(x => x.item.code).join(", ")} · ` : ""}${previewCode === item.code ? "Click to hide alternative sections" : "Click to preview alternative sections"}`}>
-              <b>{item.code}</b><small>Sec {item.section} · {room}</small>{group.length > 1 && <em>Clash</em>}
+              <b>{item.code}</b><small>Sec {item.section} · {room}</small><small>{hours[hour]}–{String(hour + length + 8).padStart(2, "0")}:20</small>{group.length > 1 && <em>Clash</em>}
             </button>)}
           </div>)}
         </div></div>
@@ -339,5 +354,5 @@ function Module({ side, code, title, credits, href, creditUnit }: { side: string
   return <div className="module"><small>{side}</small><a href={href} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{code} ↗</a><span>{title}</span>{credits > 0 && <em>{credits} {side === "NUS" ? "MCs" : creditUnit}</em>}</div>;
 }
 function Sections({ course, addCourse, hasConflict, selected }: { course: FlatCourse; addCourse: (c: FlatCourse, s: string) => void; hasConflict: (s: Section, code?: string) => boolean; selected: Selected[] }) {
-  return <div className="sections"><span className="sectionsLabel">Sections<small>Tap card for Section 1, or choose</small></span>{Object.entries(course.sections).map(([number, section]) => { const active = selected.some(x => x.code === course.code && x.section === number); const conflict = hasConflict(section, course.code); const meetingSlots = slots(section); return <button key={number} className={active ? "active" : conflict ? "conflict" : meetingSlots.length === 0 ? "tba" : ""} onClick={e => { e.stopPropagation(); addCourse(course, number); }} title={meetingSlots.length === 0 ? `${section.instructor} · Schedule TBA` : `${conflict ? "Conflict · " : ""}${section.instructor} · ${meetingSlots.map(s => `${days[s.day]} ${hours[s.hour]}`).join(", ")}`}><b>{number}</b></button>; })}</div>;
+  return <div className="sections"><span className="sectionsLabel">Sections<small>Tap card for Section 1, or choose</small></span>{Object.entries(course.sections).map(([number, section]) => { const active = selected.some(x => x.code === course.code && x.section === number); const conflict = hasConflict(section, course.code); const meetingSlots = slots(section); return <button key={number} className={active ? "active" : conflict ? "conflict" : meetingSlots.length === 0 ? "tba" : ""} onClick={e => { e.stopPropagation(); addCourse(course, number); }} title={meetingSlots.length === 0 ? `${section.instructor} · Schedule TBA` : `${conflict ? "Conflict · " : ""}${section.instructor} · ${meetingSlots.map(s => `${days[s.day]} ${timeRange(s.hour)}`).join(", ")}`}><b>{number}</b></button>; })}</div>;
 }
