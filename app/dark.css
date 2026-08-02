@@ -20,25 +20,25 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ink: #edf1fb;
-  --muted: #a1abc0;
-  --line: #343d50;
-  --soft: #242b39;
-  --blue: #7892ff;
+  --ink: #eeeeee;
+  --muted: #a6a6a6;
+  --line: #3a3a3a;
+  --soft: #252525;
+  --blue: #8aa2f8;
   --green: #5bd5b2;
 }
 
 :root[data-theme="dark"] body,
 :root[data-theme="dark"] main,
 :root[data-theme="dark"] .planner {
-  background: #111722;
+  background: #121212;
 }
 
 :root[data-theme="dark"] .topbar,
 :root[data-theme="dark"] aside,
 :root[data-theme="dark"] .asideHead,
 :root[data-theme="dark"] .results {
-  background: #171e2a;
+  background: #181818;
 }
 
 :root[data-theme="dark"] select,
@@ -58,7 +58,7 @@
 :root[data-theme="dark"] .adapterModal,
 :root[data-theme="dark"] .promptBox pre {
   border-color: var(--line);
-  background-color: #1b2331;
+  background-color: #202020;
   color: var(--ink);
 }
 
@@ -79,7 +79,7 @@
 :root[data-theme="dark"] .selectedIndicator,
 :root[data-theme="dark"] .sections button:hover,
 :root[data-theme="dark"] .sections button.active {
-  background: #293555;
+  background: #303030;
 }
 
 :root[data-theme="dark"] .sections button.conflict {
@@ -87,8 +87,8 @@
 }
 
 :root[data-theme="dark"] .promptBox {
-  border-color: #3c496b;
-  background: #202a42;
+  border-color: #444;
+  background: #242424;
 }
 
 :root[data-theme="dark"] .unscheduledNotice {
@@ -97,12 +97,12 @@
 }
 
 :root[data-theme="dark"] .mobileSearchOverlay {
-  background: #111722;
+  background: #121212;
 }
 
 :root[data-theme="dark"] .mobileSearchHeader,
 :root[data-theme="dark"] .mobileSearchInput {
-  background: #171e2a;
+  background: #181818;
 }
 
 :root[data-theme="dark"] .modalBackdrop {
@@ -114,26 +114,26 @@
 }
 
 :root[data-theme="dark"] .timetableWrap {
-  background: #171e2a;
+  background: #181818;
 }
 
 :root[data-theme="dark"] .timetable.daysAsRows {
-  background: #202938;
+  background: #242424;
 }
 
 :root[data-theme="dark"] .daysAsRows .corner,
 :root[data-theme="dark"] .daysAsRows .timeHeader,
 :root[data-theme="dark"] .daysAsRows .dayLabel {
-  background: #202938;
+  background: #242424;
 }
 
 :root[data-theme="dark"] .daysAsRows .cell,
 :root[data-theme="dark"] .daysAsRows .cell:nth-child(odd) {
-  background: #171e2a;
+  background: #181818;
 }
 
 :root[data-theme="dark"] .daysAsRows .cell:nth-child(even) {
-  background: #1a2230;
+  background: #1d1d1d;
 }
 
 /* Exports stay print-friendly regardless of the on-screen theme. */
