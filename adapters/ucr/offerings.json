@@ -72,31 +72,6 @@
               "days": [
                 2
               ],
-              "startMinutes": 1080,
-              "endMinutes": 1190,
-              "room": "UTLF 0203",
-              "type": "Laboratory"
-            }
-          ]
-        },
-        "001.4": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
-          "schedule": {},
-          "meetings": [
-            {
-              "days": [
-                1,
-                3
-              ],
-              "startMinutes": 570,
-              "endMinutes": 650,
-              "room": "SSC 235",
-              "type": "Lecture"
-            },
-            {
-              "days": [
-                2
-              ],
               "startMinutes": 840,
               "endMinutes": 950,
               "room": "UTLF 0203",
@@ -174,31 +149,6 @@
               ],
               "startMinutes": 720,
               "endMinutes": 830,
-              "room": "UTLF 0203",
-              "type": "Laboratory"
-            }
-          ]
-        },
-        "002.4": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
-          "schedule": {},
-          "meetings": [
-            {
-              "days": [
-                1,
-                3
-              ],
-              "startMinutes": 660,
-              "endMinutes": 740,
-              "room": "SSC 235",
-              "type": "Lecture"
-            },
-            {
-              "days": [
-                2
-              ],
-              "startMinutes": 1080,
-              "endMinutes": 1190,
               "room": "UTLF 0203",
               "type": "Laboratory"
             }
