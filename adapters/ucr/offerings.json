@@ -661,32 +661,6 @@
               "type": "Discussion"
             }
           ]
-        },
-        "001.3": {
-          "instructor": "Roy Chowdhury, Amit, Wolf, Kimberley, Yao, Manyi",
-          "schedule": {},
-          "meetings": [
-            {
-              "days": [
-                0,
-                2,
-                4
-              ],
-              "startMinutes": 840,
-              "endMinutes": 890,
-              "room": "SSC 235",
-              "type": "Lecture"
-            },
-            {
-              "days": [
-                3
-              ],
-              "startMinutes": 1080,
-              "endMinutes": 1130,
-              "room": "UTLF 0303",
-              "type": "Discussion"
-            }
-          ]
         }
       }
     },
