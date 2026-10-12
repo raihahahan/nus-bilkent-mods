@@ -5,7 +5,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -30,7 +30,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -55,7 +55,7 @@
           ]
         },
         "001.3": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -80,7 +80,7 @@
           ]
         },
         "002.1": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -105,7 +105,7 @@
           ]
         },
         "002.2": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -130,7 +130,7 @@
           ]
         },
         "002.3": {
-          "instructor": "Miller, Kristen, Wolf, Kimberley",
+          "instructor": "Miller, Kristen, Wolf, Kimberley, Dai, Huangliang, Tan, Sixu",
           "schedule": {},
           "meetings": [
             {
@@ -161,7 +161,7 @@
       "credits": 5,
       "sections": {
         "001.1": {
-          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley",
+          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley, Mane, Tejas, Ding, Xiangyun",
           "schedule": {},
           "meetings": [
             {
@@ -195,7 +195,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley",
+          "instructor": "Watkinson Medina, Neftali, Wolf, Kimberley, Mane, Tejas, Ding, Xiangyun",
           "schedule": {},
           "meetings": [
             {
@@ -229,7 +229,7 @@
           ]
         },
         "002.1": {
-          "instructor": "Knight, Allan, Wolf, Kimberley",
+          "instructor": "Knight, Allan, Wolf, Kimberley, Mamun, Md Abdullah Al, Ding, Xiangyun",
           "schedule": {},
           "meetings": [
             {
@@ -263,7 +263,7 @@
           ]
         },
         "002.2": {
-          "instructor": "Knight, Allan, Wolf, Kimberley",
+          "instructor": "Knight, Allan, Wolf, Kimberley, Mamun, Md Abdullah Al, Ding, Xiangyun",
           "schedule": {},
           "meetings": [
             {
@@ -303,7 +303,7 @@
       "credits": 4,
       "sections": {
         "001": {
-          "instructor": "Schroeder, Craig",
+          "instructor": "Liu, Fox, Schroeder, Craig",
           "schedule": {},
           "meetings": [
             {
@@ -334,7 +334,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Wolf, Kimberley, Song, Chengyu",
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir, Cheng, Jiajun",
           "schedule": {},
           "meetings": [
             {
@@ -360,7 +360,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Wolf, Kimberley, Song, Chengyu",
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir, Cheng, Jiajun",
           "schedule": {},
           "meetings": [
             {
@@ -386,7 +386,7 @@
           ]
         },
         "001.3": {
-          "instructor": "Wolf, Kimberley, Song, Chengyu",
+          "instructor": "Wolf, Kimberley, Song, Chengyu, Al-Islam, Muntashir, Cheng, Jiajun",
           "schedule": {},
           "meetings": [
             {
@@ -418,7 +418,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Zhao, Zhijia",
+          "instructor": "Zhao, Zhijia, Wang, Zhijie",
           "schedule": {},
           "meetings": [
             {
@@ -443,7 +443,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Zhao, Zhijia",
+          "instructor": "Zhao, Zhijia, Wang, Zhijie",
           "schedule": {},
           "meetings": [
             {
@@ -474,7 +474,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Salloum, Mariam",
+          "instructor": "Salloum, Mariam, Bian, Yiyang",
           "schedule": {},
           "meetings": [
             {
@@ -499,7 +499,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Salloum, Mariam",
+          "instructor": "Salloum, Mariam, Bian, Yiyang",
           "schedule": {},
           "meetings": [
             {
@@ -530,7 +530,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Wolf, Kimberley, Li, Weizi",
+          "instructor": "Wolf, Kimberley, Bhaumik, Kishor Kumar, Li, Weizi",
           "schedule": {},
           "meetings": [
             {
@@ -555,7 +555,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Wolf, Kimberley, Li, Weizi",
+          "instructor": "Wolf, Kimberley, Bhaumik, Kishor Kumar, Li, Weizi",
           "schedule": {},
           "meetings": [
             {
@@ -580,7 +580,7 @@
           ]
         },
         "001.3": {
-          "instructor": "Wolf, Kimberley, Li, Weizi",
+          "instructor": "Wolf, Kimberley, Bhaumik, Kishor Kumar, Li, Weizi",
           "schedule": {},
           "meetings": [
             {
@@ -669,7 +669,7 @@
       "credits": 4,
       "sections": {
         "001.1": {
-          "instructor": "Zhang, Qian",
+          "instructor": "Qiu, Yuxin, Zhang, Qian",
           "schedule": {},
           "meetings": [
             {
@@ -694,7 +694,7 @@
           ]
         },
         "001.2": {
-          "instructor": "Zhang, Qian",
+          "instructor": "Qiu, Yuxin, Zhang, Qian",
           "schedule": {},
           "meetings": [
             {
@@ -725,7 +725,7 @@
       "credits": 4,
       "sections": {
         "001": {
-          "instructor": "Dong, Yue",
+          "instructor": "Dong, Yue, Fu, Yu",
           "schedule": {},
           "meetings": [
             {
@@ -769,7 +769,7 @@
       "credits": 4,
       "sections": {
         "001": {
-          "instructor": "Ver Steeg, Gregory",
+          "instructor": "Ver Steeg, Gregory, Chowdhury, MD Taukir Azam",
           "schedule": {},
           "meetings": [
             {
@@ -791,7 +791,7 @@
       "credits": 4,
       "sections": {
         "001": {
-          "instructor": "Tsotras, Vassilis",
+          "instructor": "Tsotras, Vassilis, Abdelmaguid, Ahmed",
           "schedule": {},
           "meetings": [
             {
